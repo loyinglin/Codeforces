@@ -7,7 +7,32 @@
 
 /************************** 题解 **********************
  题目链接：http://codeforces.com/contest/697/problem/D
- 题目大意：
+ 题目大意：n个点形成一棵树，根节点为1。以1为起点，对树进行dfs遍历，current_time为访问到的时间。
+ 求每个点的current_time期望值。
+ 样例输入：
+ 7
+ 1 2 1 1 4 4
+ 样例输出：
+ 1.0 4.0 5.0 3.5 4.5 5.0 5.0 
+ 
+ 样例输入：
+ 12
+ 1 1 2 2 4 4 3 3 1 10 8
+ 样例输出：
+ 1.0 5.0 5.5 6.5 7.5 8.0 8.0 7.0 7.5 6.5 7.5 8.0 
+ 
+ ```
+ let starting_time be an array of length n
+ current_time = 0
+ dfs(v):
+	current_time = current_time + 1
+	starting_time[v] = current_time
+	shuffle children[v] randomly (each permutation with equal possibility)
+	// children[v] is vector of children cities of city v
+	for u in children[v]:
+ dfs(u)
+ ```
+ 
  题目解析：
  
  对于点u有的若干个子节点，有：
