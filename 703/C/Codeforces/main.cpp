@@ -50,9 +50,7 @@ int main(int argc, const char * argv[]) {
 
         minT = min(minT, -t / k);
         maxT = max(maxT, -t / k);
-//        cout << "TEST : " << -t / k << endl;
     }
-//    cout << minT << " " << maxT << endl;
     if (minT >= 0) {
         ret = l;
     }
