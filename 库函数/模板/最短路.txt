@@ -1,0 +1,113 @@
+#include<cstdio>
+#include<cmath>
+#include<stack>
+#include<map>
+#include<set>
+#include<queue>
+#include<deque>
+#include<string>
+#include<utility>
+#include<sstream>
+#include<cstring>
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+typedef long long lld;
+const lld N = 5002;
+const lld M = N * N;
+const lld inf = 0x3ffffffffffffffll;
+struct Edge
+{
+    lld s, t, c;
+    lld next;
+}e[M];
+lld cnt;
+lld sumFlow;
+lld pre[N], dist[N], eat[N];
+lld inq[N], vt[N], a[N], b[N], c[N], d[N], x[N];
+void init()
+{
+    cnt = 0;
+    memset(pre, -1, sizeof(pre));
+}
+void addedge(lld s, lld t, lld c)
+{
+//    cout << " test " << s << " " << t << " " << c << endl;
+    e[cnt].s = s, e[cnt].t = t, e[cnt].c = c, e[cnt].next = pre[s];
+    pre[s] = cnt++;
+}
+lld SPFA(lld s, lld t, lld n)
+{
+    queue <lld> q;
+    memset(inq, 0, sizeof(inq));
+    memset(eat, -1, sizeof(eat));
+    memset(vt, 0 ,sizeof(vt));
+    for(lld i = 0; i <= n; i ++) dist[i] = inf;
+    inq[s] = 1;
+    vt[s]++;
+    dist[s] = 0;
+    q.push(s);
+    while(!q.empty()){
+        lld u = q.front();
+        q.pop();
+        inq[u] = 0;
+        if(vt[u] > n) break;
+        for(lld i = pre[u]; i != -1; i = e[i].next){
+            lld v = e[i].t;
+            if(dist[v] > dist[u] + e[i].c){
+                dist[v] = dist[u] + e[i].c;
+                eat[v] = i;
+                if(!inq[v]){
+                    q.push(v);
+                    vt[v]++;
+                    inq[v] = 1;
+                }
+            }
+        }
+    }
+    if(dist[t] == inf || !q.empty()) return inf;
+    return dist[t];
+}
+
+int main()
+{
+    
+    
+    lld n, dest, src;
+    cin >> n >> src >> dest;
+    init();
+    for(lld i = 1; i <= n; i ++){
+        cin >> x[i];
+    }
+    for(lld i = 1; i <= n; i ++){
+        cin >> a[i];
+    }
+    for(lld i = 1; i <= n; i ++){
+        cin >> b[i];
+    }
+    for(lld i = 1; i <= n; i ++){
+        cin >> c[i];
+    }
+    for(lld i = 1; i <= n; i ++){
+        cin >> d[i];
+    }
+    
+    for (lld i = 1; i <= n; ++i) {
+        for (lld j = 1; j <= n; ++j) {
+            if (i < j) {
+                addedge(i, j, x[j] - x[i] + d[i] + a[j]);
+            }
+            else if (i > j) {
+                addedge(i, j, x[i] - x[j] + c[i] + b[j]);
+            }
+        }
+    }
+    
+    lld ans = SPFA(src, dest, n);
+    cout << ans << endl;
+    
+    return 0;
+}
+
+

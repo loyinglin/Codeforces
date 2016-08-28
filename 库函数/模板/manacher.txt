@@ -1,0 +1,42 @@
+#include<cstdio>
+#include<cmath>
+#include<map>
+#include<set>
+#include<queue>
+#include<deque>
+#include<string>
+#include<cstring>
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+const int maxn = 1010100;
+char s[maxn * 2], str[maxn * 2];
+int p[maxn * 2];
+
+void manachar(int n){
+    int id, mx=0;
+    for(int i = 1; i < n; i++){
+        if(mx > i) p[i] = min(p[2 * id - i], mx - i);
+        else p[i] = 1;
+        while(str[i + p[i]] == str[i - p[i]]) p[i]++;
+        if(p[i] + i > mx) mx = p[i] + i, id = i;
+    }
+}
+int main(){
+    while(scanf("%s", s) != EOF){
+        str[0] = '@';
+        int i, j;
+        for(i = 0, j = 1; s[i]; i++){
+            str[j++] = '#';
+            str[j++] = s[i];
+        }
+        str[j++] = '#';
+        int n = j;
+        manachar(n);
+        int ans = 0;
+        for(i = 1; i < n; i++) ans = max(ans, p[i] - 1);
+        printf("%d\n", ans);
+    }
+}
+

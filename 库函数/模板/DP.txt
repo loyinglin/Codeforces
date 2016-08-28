@@ -1,0 +1,66 @@
+区间dp
+
+    for(int len = 1; len < n; ++len)                        //枚举区间长度  
+    for(int i = 1; i + len <= n; ++i){             //枚举区间头  
+        int end = i + len;                              //i为区间头，end为区间尾  
+        for (k = i; k <= end; ++k) {                //根据题目看是否需要枚举子区间
+            状态转移
+        }     
+    }  
+
+
+概率dp
+
+情况1，设dp1[][] 和 dp2[][] 然后两个互相转换
+情况2，有dp[]， 转移由前面子结构一个或者多个构成。
+
+
+
+状压dp
+把某一维压缩成2进制，枚举此维的状态，进行转移。
+一般是枚举某一维所有过程，可以优化掉某些不可能达到状态。
+
+
+
+树形dp
+一般是dfs，从根节点开始枚举，有时需要枚举子树的状态。
+实在没想法，可以参考数据范围，猜测下状态表示。
+d[i][j] 第i个节点，dp状态为j 的最优值， 转移时根据节点信息和子树信息d[k][t] k为直接子节点，t为状态（一般和j或者i有关系）
+
+
+数位dp
+一般形式为dp[pos][limit][zero] pos为数字的位置，limit表示是否有上限，zero表示是否为前导零。
+只有当前pos 位 limit 为 1 且 此 位 选了pos位的最大值时，limit会传递给下一位。
+只有当前pos 位 zero 为1，且此位选择了0时，zero会传递给下一位。
+
+int Dfs(int pos,int ac,int limit,int zero) {  
+    if (pos == -1) return 1;  
+    if (dp[pos][ac][limit][zero] != -1)  
+        return dp[pos][ac][limit][zero];  
+    int sum = 0;  
+    int tl,tz,end = limit ? digit[pos] : 9;   
+    for (int i = 0; i <= end; ++i)  {  
+        tz = zero && i == 0;  
+        tl = limit && (i == end);    
+        if (tz == 1) {  
+            sum = sum + Dfs(pos-1,0,tl,tz);  
+            if (sum >= MOD) sum -= MOD;  
+            continue;  
+        }  
+        if (next[ac][i] == -1) continue;  
+        sum = sum + Dfs(pos-1,next[ac][i],tl,tz);  
+        if (sum >= MOD) sum -= MOD;  
+    }  
+    dp[pos][ac][limit][zero] = sum;  
+    return dp[pos][ac][limit][zero];  
+}  
+
+
+
+斜率优化 / 单调队列优化dp
+找出两个优化公式，保持队头的最优解有效性（根据有效性（有可能过期） + 最优解（有可能在这一问不是最优） ），同时从队尾插入时保证最优解。
+一般为对第i个，考虑状态j , k. j < k ，的最优性（删除队头）。
+求出状态i后，有j < k < i ， 通过斜率求最优性，一般为淘汰掉状态k（删除队尾）。
+初始化队列有状态0。
+
+

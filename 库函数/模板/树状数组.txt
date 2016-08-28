@@ -1,0 +1,23 @@
+int tree[MX];  
+int low_bit(int x)  
+{  
+    return x&-x;  
+}  
+void tree_add(int x,int v)  
+{  
+    while(x<=n)  
+    {  
+        tree[x]^=v;  
+        x+=low_bit(x);  
+    }  
+}  
+int tree_sum(int x)  
+{  
+    int sum=0;  
+    while(x)  
+    {  
+        sum^=tree[x];  
+        x-=low_bit(x);  
+    }  
+    return sum;  
+}  

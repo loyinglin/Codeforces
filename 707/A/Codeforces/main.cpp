@@ -6,16 +6,11 @@
 //  Copyright © 2016年 loying. All rights reserved.
 
 /************************** 题解 **********************
-    题目链接：http://codeforces.com/contest/705/problem/A
-    题目大意：输入n，输出一个字符串。
- n = 1：I hate it
- n = 2：I hate that I love it
- n = 3：I hate that I love that I hate it
+    题目链接：http://codeforces.com/contest/707/problem/A
+    题目大意：字符中存在C M Y为混色，否则为黑白，输出对应的描述。
     题目解析：
-  ...
+ 难度在读题，黑白不仅仅是W B，还有G。
  
-把字符串分割成三部分"I hate  " + ... + "it"，再根据n构建中间的字符串。
-
 ************************* 题解 ***********************/
 #include<cstdio>
 #include<cmath>
@@ -33,7 +28,7 @@
 using namespace std;
 
 typedef long long lld;
-const int N = 10100, M = 3010100, inf = 10110110;
+const int N = 101000, M = 3010100, inf = 10110110;
 
 struct Node {
     int value, pos;
@@ -48,20 +43,25 @@ lld a[N];
 int main(int argc, const char * argv[]) {
     // insert code here...
    
-    int n;
-    cin >> n;
-    
-    string ret = "I hate ";
-    for (int i = 0; i < n - 1; ++i) {
-        if (i % 2 == 0) {
-            ret += "that I love ";
-        }
-        else {
-            ret += "that I hate ";
+    int n, m, ret = 1;
+    cin >> n >> m;
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < m; ++j) {
+            char str[10];
+            scanf("%s", str);
+            if (str[0] == 'C' || str[0] == 'M' || str[0] == 'Y') {
+                ret = 0;
+            }
         }
     }
-    ret += "it";
-    cout << ret << endl;
+    if (!ret) {
+        cout << "#Color";
+    }
+    else {
+        cout << "#Black&White";
+    }
+    
+
     
     return 0;
 }

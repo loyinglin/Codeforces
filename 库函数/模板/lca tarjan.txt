@@ -1,0 +1,57 @@
+#include<cstdio>
+#include<cmath>
+#include<map>
+#include<set>
+#include<queue>
+#include<deque>
+#include<string>
+#include<cstring>
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+const int N = 10101, M = 1011000;
+struct node{
+    int to, w, next;
+}e[M * 2];
+int pre_edge[N], pre_ask[N], ans[M], cnt;
+int vis[N], f[N], dis[N], part[N];
+void add_edge(int *pre, int s, int t, int w){
+    e[cnt].to = t, e[cnt].w = w, e[cnt].next = pre[s], pre[s] = cnt++;
+    e[cnt].to = s, e[cnt].w = w, e[cnt].next = pre[t], pre[t] = cnt++;
+}
+int find(int x) { return x == f[x] ? x : f[x] = find(f[x]); }
+int find_part(int x){ return x == part[x] ? x : part[x] = find_part(part[x]); }
+
+void tarjan(int u){
+    vis[u] = 1;
+    for(int i = pre_ask[u]; i != -1; i = e[i].next)
+    if(vis[e[i].to] && find_part(u) == find_part(e[i].to)) ans[e[i].w] = dis[u] + dis[e[i].to] - 2 * dis[find(e[i].to)];
+    for(int i = pre_edge[u]; i != -1; i = e[i].next)
+    if(!vis[e[i].to]) dis[e[i].to] = dis[u] + e[i].w, tarjan(e[i].to), f[e[i].to] = u;
+}
+
+int main(){
+    int n, m, c;
+    while(scanf("%d%d%d", &n, &m, &c) != EOF){
+        memset(pre_edge, -1, sizeof(pre_edge));
+        memset(pre_ask, -1, sizeof(pre_ask));
+        memset(ans, -1, sizeof(ans));
+        memset(dis, 0, sizeof(dis));
+        for(int i = 1; i <= n; i++) part[i] = i;
+        cnt = 0;
+        int s, t, w;
+        for(int i = 1; i <= m; i++){
+            scanf("%d%d%d", &s, &t, &w), add_edge(pre_edge, s, t, w);
+            int a = find_part(s), b = find_part(t);
+            if(a != b) part[a] = b;
+        }
+        for(int i = 1; i <= c; i++) scanf("%d%d", &s, &t), add_edge(pre_ask, s, t, i);
+        for(int i = 1; i <= n; i++) f[i] = i, vis[i] = 0;
+        for(int i = 1; i <= n; i++) if(!vis[i]) tarjan(i);
+        for(int i = 1; i <= c; i++)
+        if(ans[i] != -1) printf("%d\n", ans[i]);
+        else printf("Not connected\n");
+    }
+    return 0;
+}

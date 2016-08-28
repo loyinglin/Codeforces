@@ -1,0 +1,133 @@
+#include<cstdio>
+#include<stack>
+#include<set>
+#include<map>
+#include<queue>
+#include<deque>
+#include<string>
+#include<utility>
+#include<sstream>
+#include<cstring>
+#include<iostream>
+#include<algorithm>
+using namespace std;
+typedef long long lld;
+
+const int MAXN = 100001, MAXM = 2000001, inf = 100100100;
+int test;
+struct Tflow{
+	int tot, pre[MAXN], to[MAXM], c[MAXM], next[MAXM], dis[MAXN], tpre[MAXN], s, t;
+	int d[MAXN], q[MAXN], l, r;
+	void clear() { tot = 1; memset(pre, -1, sizeof(pre)); }
+	void add(int a, int b, int w, bool flag = false)
+	{
+		if (flag) swap(a, b);
+  //      if(a == test || a == 5)
+  //      cout << " add " << a << " to " << b << " flow " << w << " color " << flag << endl;
+		++tot; next[tot] = pre[a]; pre[a] = tot; to[tot] = b; c[tot] = w;
+		++tot; next[tot] = pre[b]; pre[b] = tot; to[tot] = a; c[tot] = 0;
+	}
+	int bfs(){
+        fill(dis, dis + t + 1, 0);
+        queue<int> q;
+        dis[s] = 1;
+        q.push(s);
+        while(!q.empty()){
+            int id = q.front();
+            q.pop();
+            for(int i = pre[id]; i != -1; i = next[i])
+            if(dis[to[i]] == 0 && c[i] > 0){
+    //        cout << "OK" <<endl;
+                dis[to[i]] = dis[id] + 1;
+                q.push(to[i]);
+            }
+        }
+        return dis[t] != 0;
+    }
+    int dfs(int s, int t, int cur_flow){
+        int lev = cur_flow;
+        if(s == t) return cur_flow;
+        for(int &i = tpre[s]; i != -1; i = next[i])
+        if(dis[to[i]] == dis[s] + 1 && c[i] > 0 && lev > 0){
+            int temp = dfs(to[i], t, min(lev, c[i]));
+            c[i] -= temp;
+            c[i^1] += temp;
+            lev -= temp;
+        }
+        return cur_flow - lev;
+    }
+	int dinic_flow(){
+        int sum = 0;
+        while(bfs()){
+            int flow;
+            for(int i = 0; i <= t; i++) tpre[i] = pre[i];
+            while(flow = dfs(s, t, inf)) sum += flow;
+        }
+        return sum;
+    }
+} flow;
+int log(int x) { return 31 - __builtin_clz(x); }
+int n, m, Q, a[1001][1001], b[1001][1001];
+int V[1001][1001], v[2][101][101][21][21];
+const int INF = 2000000000;
+int main()
+{
+#ifdef __woshi5dmdeclj
+	freopen("temp.in", "r", stdin);
+	freopen("temp.out", "w", stdout);
+#endif
+
+int T; scanf("%d", &T);
+while(T--){
+	int ans = 0, tot = 0;
+	scanf("%d%d%d", &n, &m, &Q);
+	for (int i = 1; i <= n; i++) for (int j = 1; j <= m; j++) scanf("%d", &a[i][j]), ans += a[i][j];
+	for (int i = 1; i <= n; i++) for (int j = 1; j <= m; j++) scanf("%d", &b[i][j]), ans += b[i][j];
+	flow.clear();
+	for (int i = 1; i <= n; i++)
+		for (int j = 1; j <= m; j++){
+			V[i][j] = ++tot;
+			v[0][i][j][0][0] = tot;
+			v[1][i][j][0][0] = tot;
+		}
+	for (int i = 0; (1 << i) <= n; i++)
+		for (int j = 0; (1 << j) <= m; j++) if (i + j)
+			for (int x = 1; x + (1 << i) - 1 <= n; x++)
+				for (int y = 1; y + (1 << j) - 1 <= m; y++){
+					v[0][x][y][i][j] = ++tot;
+					v[1][x][y][i][j] = ++tot;
+				}
+    test = v[0][1][1][1][1];
+	int s = tot + Q + 1, t = tot + Q + 2;
+	for (int i = 1; i <= n; i++) for (int j = 1; j <= m; j++){
+		flow.add(s, V[i][j], a[i][j]);
+		flow.add(V[i][j], t, b[i][j]);
+	}
+	for (int i = 0; (1 << i) <= n; i++)
+		for (int j = 0; (1 << j) <= m; j++) if (i + j)
+			for (int x = 1; x + (1 << i) - 1 <= n; x++)
+				for (int y = 1; y + (1 << j) - 1 <= m; y++)
+					for (int c = 0; c <= 1; c++){
+						if (i && j) flow.add(v[c][x][y][i][j], v[c][x + (1 << i - 1)][y + (1 << j - 1)][max(0, i - 1)][max(0, j - 1)], INF, c);
+						if (j) flow.add(v[c][x][y][i][j], v[c][x][y + (1 << j - 1)][max(0, i - 1)][max(0, j - 1)], INF, c);
+						if (i) flow.add(v[c][x][y][i][j], v[c][x + (1 << i - 1)][y][max(0, i - 1)][max(0, j - 1)], INF, c);
+						flow.add(v[c][x][y][i][j], v[c][x][y][max(0, i - 1)][max(0, j - 1)], INF, c);
+					}
+
+	while(Q--){
+		int x1, y1, x2, y2, c, val;
+		scanf("%d%d%d%d%d%d", &x1, &y1, &x2, &y2, &c, &val);
+		c ^= 1;
+		++tot;  ans += val;
+		if (c == 0) flow.add(s, tot, val);
+		else flow.add(tot, t, val);
+		int l1 = log(x2 - x1 + 1), l2 = log(y2 - y1 + 1);
+		flow.add(tot, v[c][x1][y1][l1][l2], INF, c);
+		flow.add(tot, v[c][x2 - (1 << l1) + 1][y1][l1][l2], INF, c);
+		flow.add(tot, v[c][x1][y2 - (1 << l2) + 1][l1][l2], INF, c);
+		flow.add(tot, v[c][x2 - (1 << l1) + 1][y2 - (1 << l2) + 1][l1][l2], INF, c);
+	}
+	flow.s = s; flow.t = t;
+	cout << ans - flow.dinic_flow() << endl;
+}
+}

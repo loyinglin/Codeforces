@@ -1,0 +1,78 @@
+#include<cstdio>
+#include<cmath>
+#include<stack>
+#include<map>
+#include<set>
+#include<queue>
+#include<deque>
+#include<string>
+#include<utility>
+#include<sstream>
+#include<cstring>
+#include<iostream>
+#include<algorithm>
+using namespace std;
+const int maxn=200000;
+struct node{
+    node *ch[28], *f;
+    int ml , temp;
+}pool[maxn * 2], *head, *last , *b[maxn];
+char s[maxn], str[maxn];
+int tot , d[maxn]={0};
+node* need(int t){
+    memset(pool + t, 0, sizeof(pool[t]));
+    return &pool[t];
+}
+void add(int c, int loc){
+	node *p = last, *np = need(++tot);
+	np->ml = loc;
+	for(; p && !p->ch[c]; p = p->f) p->ch[c]=np;
+	last = np;
+	if(!p) np->f = head;
+	else
+		if(p->ch[c]->ml == p->ml + 1) np->f = p->ch[c];
+		else{
+			node *q = p->ch[c], *r = need(++tot);
+			*r = *q;
+			r->ml = p->ml + 1;
+			q->f = np->f = r;
+			for(; p && p->ch[c] == q; p = p->f) p->ch[c] = r;
+		}
+}
+int main(){
+    scanf("%s", s);
+    int n = strlen(s);
+    tot = -1;
+    last = head = need(++tot);
+    for(int i = 0; i < n; ++i) add(s[i] - 'a', i + 1);
+    for(int i = 0; i <= tot; ++i) d[pool[i].ml]++;		//注意初始化
+    for(int i = 1; i <= n; ++i) d[i] += d[i - 1];
+    for(int i = 0; i <= tot; ++i) b[--d[pool[i].ml]] = &pool[i];
+    while(cin >> str){
+        int m = strlen(str) , mid = 0;
+        node *p = head;
+        for(int i = 0; i < m; i++){
+            int id = str[i] - 'a';
+            if(p->ch[id]) p = p->ch[id], mid++;
+            else{
+                while(p && !p->ch[id]) p = p->f;
+                if(!p) mid = 0, p = head;
+                else mid = p->ml + 1 , p = p->ch[id];
+            }
+            if(mid > p->temp) p->temp = mid;
+        }
+        for(int i = tot; i > 0; i--){ 
+
+//核心代码。求出对于每个串，每个点匹配最长长度。
+//用g[i][j]表示第n个串与第i个串匹配以j结尾最长可以匹配多长。
+//然后取max[j=1~len](min(g[1~n-1][j]))
+
+            if(b[i]->ml > b[i]->temp) b[i]->ml = b[i]->temp;
+            if(b[i]->f->temp < b[i]->temp) b[i]->f->temp = b[i]->temp;
+            b[i]->temp = 0;
+        }
+    }
+    int ans = 0;
+    for(int i = 0; i <= tot; i++) ans = max(ans, pool[i].ml);
+    printf("%d\n" , ans);
+}

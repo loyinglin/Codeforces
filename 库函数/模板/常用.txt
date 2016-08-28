@@ -1,0 +1,18 @@
+运算符优先级
+单元操作符
+* / %
++ -
+>> <<
+<　> <= 等比较操作符
+& | ^ 
+&& ||
+?:
+赋值。
+
+inline void _read(int &x){
+    char t=getchar();bool sign=true;
+    while(t<'0'||t>'9')
+    {if(t=='-')sign=false;t=getchar();}
+    for(x=0;t>='0'&&t<='9';t=getchar())x=x*10+t-'0';
+    if(!sign)x=-x;
+}

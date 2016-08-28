@@ -1,0 +1,79 @@
+#include<cstdio>
+#include<cmath>
+#include<map>
+#include<set>
+#include<queue>
+#include<deque>
+#include<stack>
+#include<string>
+#include<cstring>
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+typedef long long lld;
+const int N = 201010, inf = 100001000;
+stack<int> S;  
+vector<int> g[N];
+int sv[N], dfn[N], low[N];
+int in[N], out[N], num[N];
+int id; //连通分支个数
+
+void dfs(int u, int dep){
+    low[u] = dfn[u] = dep;  
+    S.push(u);       
+    for(int i = 0; i < g[u].size(); ++i){
+        int v = g[u][i];
+        if(dfn[v] == -1) dfs(v, dep + 1);
+        if(sv[v] == -1) low[u] = min(low[u], low[v]);  // 判断不可少
+    }
+    if(low[u] == dfn[u]){
+        ++id;
+        while(S.top() != u){
+            sv[S.top()] = id;
+            S.pop();
+        }
+        sv[S.top()] = id;
+        S.pop();
+    }
+}
+int tarjan(int n){
+    while(!S.empty()) S.pop();
+    memset(dfn, -1, sizeof(dfn));
+    memset(sv, -1, sizeof(sv));
+    id = 0;
+    for(int i = 1; i <= n; ++i) if (dfn[i] == -1) dfs(i, 0);
+    return id;
+}
+int main(){
+    int t, cas = 0;
+    cin >> t;
+    while(t--){
+        int n, m;
+        cin >> n >> m;
+        for(int i = 1; i <= n; ++i) g[i].clear();
+        for(int i = 1; i <= m; ++i){
+            int from, to;
+            scanf("%d%d", &from, &to);
+            g[from].push_back(to);
+        }
+        tarjan(n);
+        memset(in, 0, sizeof(in));
+        memset(out, 0, sizeof(out));
+        memset(num, 0, sizeof(num));
+        for(int u = 1; u <= n; ++num[sv[u]], ++u)
+        for(int i = 0; i < g[u].size(); ++i){
+            int v = g[u][i];
+            if(sv[u] != sv[v]) out[sv[u]]++, in[sv[v]]++;
+        }
+        int outnum = 0, innum = 0;
+        for(int i = 1; i <= id; ++i){
+            if(in[i] == 0) innum ++;
+            if(out[i] == 0) outnum ++;
+        }
+        int ans = max(innum, outnum);
+        if(id == 1) ans = 0;
+        printf("%d\n", ans);
+    }
+}
+

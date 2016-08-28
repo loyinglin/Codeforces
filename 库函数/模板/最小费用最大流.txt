@@ -1,0 +1,113 @@
+#include<cstdio>
+#include<cmath>
+#include<stack>
+#include<map>
+#include<set>
+#include<queue>
+#include<deque>
+#include<string>
+#include<utility>
+#include<sstream>
+#include<cstring>
+#include<iostream>
+#include<algorithm>
+using namespace std ;
+const int N = 502;
+const int M = 110002;
+const int inf = 100100100;
+struct Edge
+{
+    int s, t, f, c;
+    int next;
+}e[M];
+int cnt;
+int sumFlow;
+int pre[N], dist[N], eat[N];
+int inq[N], vt[N];
+void init()
+{
+    cnt = 0;
+    memset(pre, -1, sizeof(pre));
+}
+void addedge(int s, int t, int f, int c)
+{
+    e[cnt].s = s, e[cnt].t = t, e[cnt].f = f, e[cnt].c = c, e[cnt].next = pre[s];
+    pre[s] = cnt++;
+    e[cnt].s = t, e[cnt].t = s, e[cnt].f = 0, e[cnt].c = -c, e[cnt].next = pre[t];
+    pre[t] = cnt++;
+}
+bool SPFA(int s, int t, int n)
+{
+    queue <int> q;
+    memset(inq, 0, sizeof(inq));
+    memset(eat, -1, sizeof(eat));
+    memset(vt, 0 ,sizeof(vt));
+    for(int i = 0; i <= n; i ++) dist[i] = inf;
+    inq[s] = 1;
+    vt[s]++;
+    dist[s] = 0;
+    q.push(s);
+    while(!q.empty()){
+        int u = q.front();
+        q.pop();
+        inq[u] = 0;
+        if(vt[u] > n) break;
+        for(int i = pre[u]; i != -1; i = e[i].next){
+            int v = e[i].t;
+            if(e[i].f && dist[v] > dist[u] + e[i].c){
+                dist[v] = dist[u] + e[i].c;
+                eat[v] = i;
+                if(!inq[v]){
+                    q.push(v);
+                    vt[v]++;
+                    inq[v] = 1;
+                }
+            }
+        }
+    }
+    if(dist[t] == inf || !q.empty()) return false;
+    return true;
+}
+int MCMF(int s, int t, int n) // minCostMaxFlow
+{
+    int flow = 0; // 总流量
+    int i, minflow, mincost;
+    mincost = 0;
+    while(SPFA(s, t, n)){
+        minflow = inf + 1;
+        for(i = eat[t]; i != -1; i = eat[e[i].s])
+        if(e[i].f < minflow) minflow = e[i].f;
+        flow += minflow;
+        for(i = eat[t]; i != -1; i = eat[e[i].s]){
+            e[i].f -= minflow;
+            e[i^1].f += minflow;
+        }
+        mincost += dist[t] * minflow; //单位流量的最小代价dist[t]
+    }
+    sumFlow = flow; // 题目需要流量，用于判断
+    return mincost;
+}
+int main()
+{
+    int cas;
+    scanf("%d", &cas);
+    while(cas--){
+        int n, m;
+        scanf("%d%d", &n, &m);
+        init();
+        int src = 0, dest = 2 * n + 1;
+        for(int i = 1; i <= n; i ++){
+            addedge(src, i, 1, 0);
+            addedge(i + n, dest, 1, 0);
+        }
+        for(int i = 1; i <= m; i ++){
+            int u, v, c;
+            scanf("%d%d%d", &u, &v, &c);
+            addedge(u, v + n, 1, c);
+        }
+        int ans = MCMF(src, dest, dest);
+        printf("%d\n", ans);
+    }
+    return 0;
+}
+

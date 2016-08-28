@@ -1,0 +1,79 @@
+#include<cstdio>
+#include<cmath>
+#include<map>
+#include<set>
+#include<queue>
+#include<deque>
+#include<string>
+#include<cstring>
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+const int N = 500000;
+struct tim{
+    int word;
+    tim *ch[26], *fail;
+}node[N];
+char s[N], str[N];
+int cnt;
+tim *head;
+
+tim* need(int t){
+    memset(node + t, 0, sizeof(tim));
+    return &node[t];
+}
+void insert(char s[]){				//字典树建树
+    tim *p = head;
+    for(int i = 0; s[i]; i++){
+        int id = s[i] - 'a';
+        if(!p->ch[id]) p->ch[id] = need(++cnt);
+        p = p->ch[id];
+    }
+    p->word++;
+}
+void build(){
+    queue<tim*> q;
+    q.push(head);
+    while(!q.empty()){
+        tim *p = q.front();
+        q.pop();
+        for(int i = 0; i < 26; i++){
+            tim *fail = (p == head) ? head : p->fail->ch[i];    //如果为头指针，则失败时指向自己
+            if(!p->ch[i]) p->ch[i] = fail;  //很方便的一点
+            else{
+                p->ch[i]->fail = fail;
+                q.push(p->ch[i]);
+            }
+        }
+    }
+}
+int look(char str[]){
+    int sum = 0;
+    tim *p = head;
+    for(int i = 0; str[i]; i++){
+        int id = str[i] - 'a';
+        p = p->ch[id];
+        tim* tp = p;
+        while(tp != head)
+        if(tp->word > 0)
+        sum += tp->word, tp->word = 0;
+        else
+        tp = tp->fail;
+    }
+    return sum;
+}
+int main(){
+    int cas;
+    cin >> cas;
+    while(cas--){
+        int n;
+        cin >> n;
+        cnt = 0;
+        head = need(cnt);
+        while(n--) scanf("%s", s), insert(s);
+        build();
+        scanf("%s", s);
+        cout << look(s) << endl;
+    }
+}

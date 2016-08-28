@@ -1,0 +1,52 @@
+#include<cstdio>
+#include<cmath>
+#include<stack>
+#include<map>
+#include<set>
+#include<queue>
+#include<deque>
+#include<string>
+#include<utility>
+#include<sstream>
+#include<cstring>
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+typedef long long lld;
+const int N = 101000, inf = 10101010;
+int next[N];
+char s[N], str[N];
+void getNext(char *s){
+//    next[j] = max(k : 0 < k < j  s[0...k - 1] = s[j - k, j - 1]
+//    最长后缀的长度等于相同字符序列的前缀
+    int n = strlen(s);
+    int i = 0, j = -1;
+    next[0] = -1;
+    while(i < n){
+        if(j == -1 || s[i] == s[j])
+        i++, j++, next[i] = j;
+        else
+        j = next[j];
+    }
+}
+
+int main(){
+    while(scanf("%s", s) != EOF){
+        scanf("%s", str);
+        getNext(s);
+        int n = strlen(s), m = strlen(str);
+        int i = 0, j = 0;
+        while(i < m){
+            if(j == -1 || str[i] == s[j])
+            i++, j++;
+            else
+            j = next[j];
+        }
+        if(j == 0) cout << j << endl;
+        else{
+            string ss(s, s + j);
+            cout << ss << ' ' << j << endl;
+        }
+    }
+}

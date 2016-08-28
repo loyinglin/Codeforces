@@ -1,0 +1,107 @@
+#include<cstdio>
+#include<cmath>
+#include<stack>
+#include<map>
+#include<set>
+#include<queue>
+#include<deque>
+#include<string>
+#include<utility>
+#include<sstream>
+#include<cstring>
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+typedef long long lld;
+const int N = 110, M = 100000, inf = 100100100; //注意修改点的范围
+struct Edge{
+    int s, t, f, id;
+    int next;
+}e[M];
+int pre[N], tpre[N], dis[N], in[N], ans[M], cnt;
+int addedge(int s, int t, int f, int id){ //有上下界的最大流模板
+    e[cnt].s = s, e[cnt].t = t, e[cnt].f = f, e[cnt].id = id, e[cnt].next = pre[s];
+    pre[s] = cnt++;
+    e[cnt].s = t, e[cnt].t = s, e[cnt].f = 0, e[cnt].id = 0, e[cnt].next = pre[t];
+    pre[t] = cnt++;
+}
+int bfs(int s, int t){
+    memset(dis, 0, sizeof(dis));
+    queue<int> q;
+    dis[s] = 1;
+    q.push(s);
+    while(!q.empty()){
+        int id = q.front();
+        q.pop();
+        for(int i = pre[id]; i != -1; i = e[i].next)
+        if(dis[e[i].t] == 0 && e[i].f > 0){
+            dis[e[i].t] = dis[id] + 1;
+            q.push(e[i].t);
+        }
+    }
+    return dis[t] != 0;
+}
+int dfs(int s, int t, int cur_flow){
+    int lev = cur_flow;
+    if(s == t) return cur_flow;
+    for(int &i = tpre[s]; i != -1; i = e[i].next)
+    if(dis[e[i].t] == dis[s] + 1 && e[i].f > 0 && lev > 0){
+        int temp = dfs(e[i].t, t, min(lev, e[i].f));
+        e[i].f -= temp;
+        e[i^1].f += temp;
+        lev -= temp;
+    }
+    return cur_flow - lev;
+}
+int dinic_flow(int s, int t){    //注意是从s到t，故而s最小，t最大
+    int sum = 0;
+    while(bfs(s, t)){
+        int flow;
+        for(int i = s; i <= t; i++) tpre[i] = pre[i];
+        while(flow = dfs(s, t, inf)) sum += flow;
+    }
+    return sum;
+}
+
+int limit_min_flow(int n, int m){
+    int src = 0, dest = n + 1;
+    for(int i = 1; i <= n; i ++)
+    if(in[i] > 0) addedge(src, i, in[i], 0);
+    else addedge(i, dest, -in[i], 0);
+    dinic_flow(src, dest);
+    addedge(n, 1, inf, 0);
+    dinic_flow(src, dest);
+    for(int i = pre[src]; i != -1; i = e[i].next)
+    if(e[i].f > 0){
+        printf("Impossible\n");
+        return 0;
+    }
+    int sum = e[cnt - 1].f;
+    for(int i = 0; i < cnt; i ++){
+        ans[e[i].id] += e[i^1].f;
+    }
+    printf("%d\n", sum);
+    for(int i = 1; i < m; i ++) printf("%d ", ans[i]);
+    printf("%d\n", ans[m]);
+}
+void flow_init(){
+    memset(pre, -1, sizeof(pre));
+    memset(ans, 0, sizeof(ans));
+    memset(in, 0, sizeof(in));
+    cnt = 0;
+}
+int main(){
+    int n, m;
+    while(cin >> n >> m){
+        flow_init();
+        for(int i = 1; i <= m; i ++){
+            int from, to, w, k;
+            cin >> from >> to >> w >> k;
+            if(k)in[from] -= w, in[to] += w, ans[i] = w;
+            addedge(from, to, w - ans[i], i);
+        }
+        limit_min_flow(n, m);
+    }
+}
+

@@ -6,16 +6,11 @@
 //  Copyright © 2016年 loying. All rights reserved.
 
 /************************** 题解 **********************
-    题目链接：http://codeforces.com/contest/705/problem/A
-    题目大意：输入n，输出一个字符串。
- n = 1：I hate it
- n = 2：I hate that I love it
- n = 3：I hate that I love that I hate it
+    题目链接：http://codeforces.com/contest/706/problem/A
+    题目大意：点A在（a，b），n个点以速度v[i]，向A靠近，求最短时间。
     题目解析：
-  ...
+ 计算每个点与A的距离，除以对应的速度v，取最小时间即可。
  
-把字符串分割成三部分"I hate  " + ... + "it"，再根据n构建中间的字符串。
-
 ************************* 题解 ***********************/
 #include<cstdio>
 #include<cmath>
@@ -43,25 +38,22 @@ struct Node {
         return value < tmp.value;
     };
 }node[N];
-lld a[N];
 
 int main(int argc, const char * argv[]) {
     // insert code here...
-   
+    int a, b;
+    cin >> a >> b;
+    
     int n;
     cin >> n;
     
-    string ret = "I hate ";
-    for (int i = 0; i < n - 1; ++i) {
-        if (i % 2 == 0) {
-            ret += "that I love ";
-        }
-        else {
-            ret += "that I hate ";
-        }
+    double minTime = 0x1.fffffep+127f;
+    while (n--) {
+        int x, y, v;
+        cin >> x >> y >> v;
+        minTime = min(minTime, sqrt((x- a) * (x - a) + (y - b) * (y - b)) / v);
     }
-    ret += "it";
-    cout << ret << endl;
+    printf("%.7f", minTime);
     
     return 0;
 }

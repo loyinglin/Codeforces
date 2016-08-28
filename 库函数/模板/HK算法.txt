@@ -1,0 +1,67 @@
+#include <queue>
+#include <stdio.h>
+#include <string.h>
+#include <iostream>
+using namespace std;
+const int N = 2010, inf = 1<<28;
+bool bmap[N][N], bmask[N];
+int nx,ny,dis;
+int cx[N], cy[N], dx[N], dy[N];
+
+bool bfs()
+{
+    queue<int> q;
+    dis = inf;
+    memset(dx,-1,sizeof(dx));
+    memset(dy,-1,sizeof(dy));
+    for(int i = 0;i < nx; ++i) if(cx[i] == -1) dx[i] = 0, q.push(i); //从未匹配点X[i]出发
+    while(!q.empty()){
+        int u = q.front();
+        q.pop();
+        if(dx[u] > dis) break;
+        for(int v = 0; v < ny; ++v)
+            if(bmap[u][v] && dy[v]== -1){
+                dy[v] = dx[u] + 1;
+                if(cy[v] == -1) dis = dy[v]; // 找到未匹配点Y，即是增广路存在
+                else dx[cy[v]] = dy[v] + 1, q.push(cy[v]);
+            }
+    }
+    return dis != inf;
+}
+int dfs(int u)
+{
+    for(int v = 0; v < ny; ++v){
+        if(!bmask[v] && bmap[u][v] && dy[v] == dx[u]+1){
+            bmask[v]=1;
+            if(cy[v] != -1 && dy[v] == dis) continue;
+            if(cy[v] == -1 || dfs(cy[v])){
+                cy[v] = u;
+                cx[u] = v;
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+int HK(){
+    int res = 0;
+    memset(cx, -1, sizeof(cx));
+    memset(cy, -1, sizeof(cy));
+    while(bfs()){
+        memset(bmask, 0, sizeof(bmask));
+        for(int i = 0; i < nx; ++i) if(cx[i]==-1) res += dfs(i);
+    }
+    return res;
+}
+int main(){
+    int k, cas = 0;
+    while(cin >> nx >> ny >> k, nx){
+        for(int i = 0; i <= nx; ++i )for(int j = 0; j <= ny; ++j) bmap[i][j] = 1;
+        for(int i = 1; i <= k; ++i){
+            int a, b;
+            cin >> a >> b;
+            bmap[a - 1][b - 1] = 0;//注意，这里不是mat[a][b]=mat[b][a]=0
+        }
+        printf("Case %d: %d\n", ++cas, nx + ny - HK());
+    }
+}

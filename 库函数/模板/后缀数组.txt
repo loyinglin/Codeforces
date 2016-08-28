@@ -1,0 +1,78 @@
+#include<cstdio>
+#include<cmath>
+#include<map>
+#include<set>
+#include<queue>
+#include<deque>
+#include<string>
+#include<cstring>
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+const int maxn = 220005;
+int wn[maxn],wa[maxn],wb[maxn],wv[maxn],a[maxn],sa[maxn],rank[maxn],height[maxn];
+char r[maxn];
+int d[maxn][20];
+
+int cmp(int *r,int a,int b,int l){ return r[a]==r[b]&&r[a+l]==r[b+l]; }
+void da(int *r,int *sa,int n,int m){
+    int i,j,p,*x=wa,*y=wb,*t;
+    for(i = 0; i < m; ++ i) wn[i] = 0;
+    for(i = 0; i < n; ++ i)wn[x[i]=r[i]]++;
+    for(i = 1; i < m; ++ i) wn[i] +=wn[i-1];
+    for(i = n - 1; i >= 0; --i)sa[--wn[x[i]]] = i;
+    for(p = 1,j = 1; p < n; j *= 2,m = p){
+        for(p = 0,i = n-j; i < n; ++i) y[p++] =i;
+        for(i = 0; i < n; ++ i)if(sa[i]>=j) y[p++] = sa[i] - j;
+        for(i = 0; i < m; ++ i) wn[i]= 0;
+        for(i = 0; i < n; ++ i)wn[wv[i]=x[y[i]]]++;
+        for(i = 1; i < m; ++ i) wn[i] +=wn[i-1];
+        for(i = n - 1; i >= 0; --i)sa[--wn[wv[i]]] = y[i];
+        for(t = x,x = y,y = t,x[sa[0]] =0,p=1,i=1; i<n; ++i)
+        x[sa[i]]=cmp(y,sa[i-1],sa[i],j)?p-1:p++;
+    }
+}
+void calheight(int *r,int *sa,int n){
+       int i,j,k = 0;
+       for(i = 1; i <= n; ++ i){ rank[sa[i]]= i; height[i] = 0;}
+       for(i = 0; i < n; height[rank[i++]]=k)
+       for(k?k--:0,j=sa[rank[i]-1];r[i+k]==r[j+k];++k);
+}
+int rmq_init(int n){
+    for(int i=0;i<=n;i++)
+    d[i][0]=height[i];
+    int t=log(n)/log(2);
+    for(int j=1;j<=t;j++)
+    for(int i=0;i-1+(1<<j)<=n;i++)
+    d[i][j]=min(d[i][j-1],d[i+(1<<(j-1))][j-1]);
+}
+int lcp(int a,int b){ // !!!! a == b的时候要特判！
+    a=rank[a];
+    b=rank[b];
+    if(a>b)
+    swap(a,b);
+    a=a+1;
+    int k=log(b-a+1)/log(2);
+    return min(d[a][k],d[b-(1<<k)+1][k]);
+}
+int main(){
+    int i,j,k,n,m;
+    while(scanf("%s",r)==1)
+    {
+        int L1 = strlen(r);
+        r[L1] = '#';
+        scanf("%s",r+L1+1);
+        for(i = 0; r[i]; ++ i) a[i] =r[i];
+        a[i] = 0;
+        da(a,sa,i+1,256);
+        calheight(a,sa,i);
+        rmq_init(i);
+        while(cin>>i>>j)
+        {
+           cout<<i<<' '<<r[i]<<' '<<rank[i]<<endl;
+           cout<<j<<' '<<r[j]<<' '<<rank[j]<<endl;
+           cout<<lcp(i,j)<<endl;
+        }
+    }
+}

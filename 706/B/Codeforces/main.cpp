@@ -6,16 +6,18 @@
 //  Copyright © 2016年 loying. All rights reserved.
 
 /************************** 题解 **********************
-    题目链接：http://codeforces.com/contest/705/problem/A
-    题目大意：输入n，输出一个字符串。
- n = 1：I hate it
- n = 2：I hate that I love it
- n = 3：I hate that I love that I hate it
+    题目链接：http://codeforces.com/contest/706/problem/B
+    题目大意：n个数，q个询问，对于每个询问k，输出n个数中小于等于k的数量；
     题目解析：
-  ...
+ 方法多种多样：
+ 1、排序，二分查找；
+ 2、动态规划；
+ 3、树状数组；
  
-把字符串分割成三部分"I hate  " + ... + "it"，再根据n构建中间的字符串。
-
+ 这里用方法2.
+dp[i] 表示小于等于i的数量；
+dp[i] = dp[i-1]+a[i]; a[i]是大小为i的数量。
+ 
 ************************* 题解 ***********************/
 #include<cstdio>
 #include<cmath>
@@ -33,7 +35,7 @@
 using namespace std;
 
 typedef long long lld;
-const int N = 10100, M = 3010100, inf = 10110110;
+const int N = 101000, M = 3010100, inf = 10110110;
 
 struct Node {
     int value, pos;
@@ -43,25 +45,34 @@ struct Node {
         return value < tmp.value;
     };
 }node[N];
-lld a[N];
+lld a[N], dp[N];
 
 int main(int argc, const char * argv[]) {
     // insert code here...
    
     int n;
     cin >> n;
-    
-    string ret = "I hate ";
-    for (int i = 0; i < n - 1; ++i) {
-        if (i % 2 == 0) {
-            ret += "that I love ";
-        }
-        else {
-            ret += "that I hate ";
-        }
+    for (int i = 0; i < n; ++i) {
+        int k;
+        cin >> k;
+        ++a[k];
     }
-    ret += "it";
-    cout << ret << endl;
+    
+    for (int i = 1; i < N; ++i) {
+        dp[i] = a[i] + dp[i - 1];
+    }
+    
+    int q;
+    cin >> q;
+    while (q--) {
+        int k;
+        cin >> k;
+        k = min(k, N - 1);
+        cout << dp[k] << endl;
+    }
+    
+    
+    
     
     return 0;
 }

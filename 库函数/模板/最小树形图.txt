@@ -1,0 +1,97 @@
+#include<cstdio>
+#include<cmath>
+#include<stack>
+#include<map>
+#include<set>
+#include<queue>
+#include<deque>
+#include<string>
+#include<utility>
+#include<sstream>
+#include<cstring>
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+typedef long long lld;  //算法流程 1.最短弧集； 2.有向圈，收缩点； 3.缩点，构图。
+const int M = 111000;
+const int N = 220;
+const int INF = 100000001;
+struct Node {
+    int u, v, w, b;
+}e[M], f[M];
+
+int x[N], y[N], z[N];
+int pre[N], vis[N], id[N], in[N];
+int idx, pos, cnt, cost;
+int dirMST(int root, int V, int E){
+   int ret = 0;
+   while(true){
+       for(int i = 0; i < V; ++i) in[i] = INF;
+       for(int i = 0; i < E; ++i){
+           int u = e[i].u, v = e[i].v, w = e[i].w;
+           if(u != v && w < in[v]){
+               in[v] = w, pre[v] = u;
+           //    if(u == root) pos = i; // real root 用于多源点时虚拟根定位真正根
+           }
+       }
+       in[root] = 0;
+       for(int i = 0; i < V; ++i)
+           if(in[i] == INF) return -1;
+       memset(vis, -1, sizeof(vis));
+       memset(id, -1, sizeof(id));
+       idx = 0;
+       for(int i = 0; i < V; ++i){
+           ret += in[i];
+           int v = i;
+           while (vis[v] != i && id[v] == -1 && v != root){
+               vis[v] = i;
+               v = pre[v];
+           }
+           if (v != root && id[v] == -1){
+               for(int u = pre[v]; u != v; u = pre[u]) id[u] = idx;
+               id[v] = idx++;
+           }
+       }
+       if(idx == 0) break;
+       for(int i = 0; i < V; ++i) if(id[i] == -1) id[i] = idx++;
+       for(int i = 0; i < E; ++i){
+           int u = e[i].u, v = e[i].v, w = e[i].w;
+           e[i].u = id[u];
+           e[i].v = id[v];
+           if(id[u] != id[v]) e[i].w -= in[v];
+       }
+       V = idx;
+       root = id[root];
+   }
+//   cout << " ret " << ret << endl;
+   if(ret <= cost) return 1;
+   else return -1;
+}
+
+void addedge(int u, int v, int w){
+    e[cnt].u = u, e[cnt].v = v, e[cnt].w = w;
+    ++cnt;
+}
+
+int main(){
+    int cas = 0;
+    cin >> cas;
+    while(cas--){
+        int n, m;
+        scanf("%d%d%d", &n, &m, &cost);
+        for(int i = 1; i <= m; ++i) scanf("%d%d%d%d", &f[i].u, &f[i].v, &f[i].b, &f[i].w);
+        int l = 1, r = 1000000, ans = -1;
+        while(l < r){
+            int mid = (l + r) / 2;
+            cnt = 0;
+     //       cout << mid << endl;
+            for(int i = 1; i <= m; ++i)
+            if(f[i].b >= mid && f[i].u != f[i].v) addedge(f[i].u, f[i].v, f[i].w);
+            if(dirMST(0, n, cnt) == -1) r = mid;
+            else ans = mid, l = mid + 1;
+        }
+        if(ans == -1) printf("streaming not possible.\n");
+        else printf("%d kbps\n", ans);
+    }
+}

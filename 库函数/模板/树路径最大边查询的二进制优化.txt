@@ -1,0 +1,108 @@
+#include<cstdio>
+#include<cmath>
+#include<stack>
+#include<map>
+#include<set>
+#include<queue>
+#include<deque>
+#include<string>
+#include<utility>
+#include<sstream>
+#include<cstring>
+#include<iostream>
+#include<algorithm>
+using namespace std;
+const int N = 50500, M = 1000000, inf = 100100100;
+struct edge{
+    int t, next, w;
+}e[M];
+int pre[N], v[N], l[N], fa[N], f[N], cost[N], cnt; //l[i],fa[i],cost[i] 分别为i节点的深度、父亲节点编号、与父亲节点的边权
+int anc[N][20], maxcost[N][20]; // anc[i][j], maxcost[i][j] 分别表示表示节点i的第2^j级祖先的编号 和 路径上的最大边
+pair<int, pair<int, int> > p[M];
+
+void process_init(int n){
+    for(int i = 1; i <= n; ++i){
+        anc[i][0] = fa[i];
+        maxcost[i][0] = cost[i];
+        for(int j = 1; (1 << j) <= n; ++j) anc[i][j] = -1;
+    }
+    for(int j = 1; (1 << j) <= n; ++j)
+    for(int i = 1; i <= n; ++i)
+    if(anc[i][j - 1] != -1){
+        int a = anc[i][j - 1];
+        anc[i][j] = anc[a][j - 1];
+        maxcost[i][j] = max(maxcost[i][j - 1], maxcost[a][j - 1]);
+    }
+}
+
+int query(int p, int q){
+    int tmp, log;
+    if(l[p] < l[q]) swap(p, q);
+    for(log = 1; (1 << log) <= l[p]; ++log);
+    --log;
+    int ans = -inf;
+    for(int i = log; i >= 0; --i)
+    if(l[p] - (1 << i) >= l[q])
+    ans = max(ans, maxcost[p][i]), p = anc[p][i];
+    if(p == q) return ans;
+    for(int i = log; i >= 0; --i)
+    if(anc[p][i] != -1 && anc[p][i] != anc[q][i]){
+        ans = max(ans, maxcost[p][i]); p = anc[p][i];
+        ans = max(ans, maxcost[q][i]); q = anc[q][i];
+    }
+    ans = max(ans, cost[p]);
+    ans = max(ans, cost[q]);
+    return ans;
+}
+void addedge(int s, int t, int w){
+    e[cnt].t = t, e[cnt].w = w, e[cnt].next = pre[s], pre[s] = cnt++;
+    e[cnt].t = s, e[cnt].w = w, e[cnt].next = pre[t], pre[t] = cnt++;
+}
+
+void dfs(int u, int father, int w, int dep){
+    v[u] = 1;
+    l[u] = dep;
+    cost[u] = w;
+    fa[u] = father;
+    for(int i = pre[u]; i != -1; i = e[i].next){
+        int to = e[i].t;
+        if(v[to]) continue;
+        dfs(to, u, e[i].w, dep + 1);
+    }
+}
+int find(int x){
+    int t = f[x];
+    if(t != x) t = find(t);
+    return f[x] = t;
+}
+int main(){
+    int n, m;
+    int block = 0;
+    while(scanf("%d%d", &n, &m) != EOF){
+        if(block) puts("");
+        else block = 1;
+        for(int i = 0; i < m; ++i) scanf("%d%d%d", &p[i].second.first, &p[i].second.second, &p[i].first);
+        sort(p, p + m);
+        cnt = 0;
+        memset(pre, -1, sizeof(pre));
+        for(int i = 1; i <= n; ++i) f[i] = i;
+        for(int i = 0; i < m; ++i){
+            int u = p[i].second.first, v = p[i].second.second, w = p[i].first;
+            if(find(u) != find(v)){
+                addedge(u, v, w);
+                f[f[u]] = f[v];
+            }
+        }
+        memset(v, 0, sizeof(v));
+        for(int i = 1; i <= n; ++i) l[i] = fa[i] = -1;
+        dfs(1, -1, -1, 0);
+        process_init(n);
+        int q;
+        scanf("%d", &q);
+        while(q--){
+            int s, t;
+            scanf("%d%d", &s, &t);
+            printf("%d\n", query(s, t));
+        }
+    }
+}

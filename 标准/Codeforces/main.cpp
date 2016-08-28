@@ -6,17 +6,11 @@
 //  Copyright © 2016年 loying. All rights reserved.
 
 /************************** 题解 **********************
-    题目链接：http://codeforces.com/contest/705/problem/A
-    题目大意：输入n，输出一个字符串。
- n = 1：I hate it
- n = 2：I hate that I love it
- n = 3：I hate that I love that I hate it
-    题目解析：
-  ...
+ 题目链接：http://codeforces.com/contest/697/problem/A
+ 题目大意：
+ 题目解析：
  
-把字符串分割成三部分"I hate  " + ... + "it"，再根据n构建中间的字符串。
-
-************************* 题解 ***********************/
+ ************************* 题解 ***********************/
 #include<cstdio>
 #include<cmath>
 #include<stack>
@@ -33,7 +27,8 @@
 using namespace std;
 
 typedef long long lld;
-const int N = 10100, M = 3010100, inf = 10110110;
+const int N = 101000, M = 3010100, inf = 0x7fffffff;
+const lld llinf = 0x7fffffff7fffffffll;
 
 struct Node {
     int value, pos;
@@ -42,12 +37,14 @@ struct Node {
     {
         return value < tmp.value;
     };
+    Node(int x, int y):value(x), pos(y){};
+    Node(){};
 }node[N];
 lld a[N];
 
 int main(int argc, const char * argv[]) {
     // insert code here...
-   
+    
     int n;
     cin >> n;
     

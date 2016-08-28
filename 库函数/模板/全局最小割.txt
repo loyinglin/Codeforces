@@ -1,0 +1,66 @@
+#include<cstdio>
+#include<stack>
+#include<set>
+#include<queue>
+#include<deque>
+#include<string>
+#include<utility>
+#include<sstream>
+#include<cstring>
+#include<iostream>
+#include<algorithm>
+using namespace std;
+typedef long long lld;
+
+const int N = 1010, inf = 100100100;
+int vis[N], wet[N], sv[N], mat[N][N];
+int n, s, t;
+int minCut;
+void dfs(){
+     memset(vis, 0, sizeof(vis));
+     memset(wet, 0, sizeof(wet));
+     s = t = -1;
+     for(int i = 0; i < n; ++i){
+        int Max = -inf, tmp;
+        for(int j = 0; j < n; ++j){
+            if(!sv[j] && !vis[j] && wet[j] > Max){
+               tmp = j;
+               Max = wet[j];
+            }
+        }
+        if(t == tmp) return;
+        s = t; t = tmp;
+        minCut = Max;
+        vis[tmp] = 1;
+        for(int j = 0; j < n; ++j)
+        if(!sv[j] && !vis[j]) wet[j] += mat[tmp][j];
+    }
+}
+int solve(){
+    int ans = inf;
+    memset(sv, 0, sizeof(sv));
+    for(int i = 0; i < n - 1; ++i){
+        minCut = inf;
+        dfs();
+        ans = min(ans, minCut);
+        if (ans == 0) return 0;
+        sv[t] = 1;
+        for(int j = 0; j < N; j++)
+        if(!sv[j]) mat[s][j] += mat[t][j], mat[j][s] += mat[j][t];
+    }
+    return ans;
+}
+int main(){
+    int m;
+    while(scanf("%d%d", &n, &m) != EOF){
+       memset(mat, 0, sizeof(mat));
+       while(m--){
+           int s, t, w;
+           scanf("%d%d%d", &s, &t, &w);
+           mat[s][t] += w;
+           mat[t][s] += w;
+       }
+       printf("%d\n", solve());
+    }
+    return 0;
+}

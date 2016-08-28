@@ -1,0 +1,142 @@
+并查集
+int find(int x){
+    return x == f[x] ? x : f[x] = find(f[x]);
+}
+
+
+树状数组
+int lowbit(int x){
+    return x & (-x);
+}
+
+void add(int pos, int v){
+    while(pos <= all){
+        c[pos] += v;
+        //c[pos]%=1000000009;
+        pos += lowbit(pos);
+    }
+}
+
+int sum(int pos){
+    int s = 0;
+    while(pos >= 1){ // not 0
+        s += c[pos];
+        s %= 1000000009;
+        pos -= lowbit(pos);
+    }
+    return s;
+}
+
+RMQ
+
+int rmq_init(int n){
+    for(int i = 1; i <= n; i++) d[i][0]=a[i];
+    int t=log(n) / log(2);
+    for(int j = 1; j <= t; j++)
+    for(int i = 1; i - 1+ (1 << j) <= n; i++)
+    d[i][j] = max(d[i][j - 1], d[i + (1 << (j - 1))][j - 1]);
+}
+
+int rmq_query(int a, int b){
+    int k = log(b - a + 1) / log(2);
+    return max(d[a][k], d[b - (1 <<k ) + 1][k]);
+}
+
+
+线段树
+int build(int k, int l, int r){
+    int t1 = 0, t2 = 0;
+    tree[k].l = l;
+    tree[k].r = r;
+    tree[k].add = 0;
+    if(l < r){
+        int temp = (l + r) >> 1;
+        t1 = build(k << 1, l, temp);
+        t2 = build(k << 1 | 1, temp + 1, r);
+    }
+    else t1 = a[l];
+    tree[k].sum = t1 + t2;
+    return tree[k].sum;
+}
+int change(int i, int l, int r, int c){   //在[l,r]上加上c
+    if(tree[i].l >= l && tree[i].r <= r){				
+        tree[i].add += c;
+        tree[i].sum += c * (tree[i].r - tree[i].l + 1);
+        return 0;
+    }
+    if(tree[i].add){							//lazy思想
+        tree[i << 1].sum += tree[i].add * (tree[i << 1].r - tree[i << 1].l + 1);
+        tree[i << 1 | 1].sum += tree[i].add * (tree[i << 1 | 1].r - tree[i << 1 | 1].l + 1);
+        tree[i << 1].add += tree[i].add;
+        tree[i << 1 | 1].add += tree[i].add;
+        tree[i].add = 0;
+    }
+    if(l <= (tree[i].l + tree[i].r) >> 1) change(i << 1, l, r, c);
+    if(r > (tree[i].l + tree[i].r) >> 1) change(i << 1 | 1, l, r, c);
+    tree[i].sum = tree[i << 1].sum + tree[i << 1 | 1].sum;
+    return 1;
+}
+
+int look(int i, int l, int r){
+    int  t1 = 0, t2 = 0;
+    if(tree[i].l >= l && tree[i].r <= r) return tree[i].sum;
+    if(tree[i].add){
+        tree[i << 1].sum += tree[i].add * (tree[i << 1].r - tree[i << 1].l + 1);
+        tree[i << 1 | 1].sum += tree[i].add * (tree[i << 1 | 1].r - tree[i << 1 | 1].l + 1);
+        tree[i << 1].add += tree[i].add;
+        tree[i << 1 | 1].add += tree[i].add;
+        tree[i].add = 0;
+    }
+    if(l <= (tree[i].l + tree[i].r) >> 1) t1 = look(i << 1, l, r);
+    if(r > (tree[i].l + tree[i].r) >> 1) t2 = look(i << 1+1,l,r);
+    return t1+t2;
+}
+
+
+
+
+
+
+
+typedef long long ll;
+const ll maxn = 112101;
+const ll mod = 1000000009, inf = 1LL << 50;
+int lc(int x){ return x << 1;}
+int rc(int x){ return x << 1 | 1;}
+struct seg {
+        int l,r;
+        ll mx;
+        int mid() {
+                return l+r>>1;
+        };
+} tree[maxn<<2];
+void init_tree(int l,int r,int x)
+{
+        tree[x].l=l,tree[x].r=r;
+        tree[x].mx=-1;
+        if(l==r)return;
+        int mid=l+r>>1;
+        init_tree(l,mid,lc(x));
+        init_tree(mid+1,r,rc(x));
+}
+void insert(int pos,int x,ll num)
+{
+        if(tree[x].l==tree[x].r) {
+                tree[x].mx=num;
+                return;
+        }
+        int mid=tree[x].mid();
+        if(pos<=mid)insert(pos,lc(x),num);
+        else insert(pos,rc(x),num);
+        tree[x].mx=max(tree[lc(x)].mx,tree[rc(x)].mx);
+}
+ll query(int l,int r,int x)
+{
+        if(l<=tree[x].l && tree[x].r<=r)
+                return tree[x].mx;
+        int mid=tree[x].mid();
+        ll res=-1;
+        if(l<=mid)res=max(res,query(l,r,lc(x)));
+        if(r>mid)res=max(res,query(l,r,rc(x)));
+        return res;
+}

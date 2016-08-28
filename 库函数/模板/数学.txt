@@ -1,0 +1,58 @@
+//最大公约数
+int gcd(int m,int n){
+    int t;
+    if(m<n){t = n;n = m;m = t;}
+    if(n == 0)
+        return m;
+    else
+        return gcd(n,m%n);
+}
+
+//最小公倍数
+int lcm(int a,int b){
+    return a/gcd(a,b) * b;
+}
+
+
+
+
+//二分 注意看哪一个是可行l，或者是r
+    while(l<r){
+        int mid=(l+r)/2;
+//        cout<<' '<<l<<' '<<r<<endl;
+        if(look(mid))
+        r=mid;
+        else
+        l=mid+1;
+    }
+
+//hash
+typedef long long lld;
+
+const int N=1301171;
+const int M=44444;
+
+struct Hash{
+    int a[N] , cnt;
+    lld nxt[M],head[N],val[M];
+    void clear(){
+        cnt=1;
+        memset(head ,0,sizeof(head));
+    }
+    void insert(lld x){
+        int p=x%N;
+        if(p<0)p+=N;
+        nxt[cnt]=head[p];
+        val[cnt]=x;
+        head[p]=cnt++;
+    }
+    bool find(lld x){
+        int p=x%N ;
+        if(p<0)p+=N;
+        for(int e=head[p];e;e=nxt[e]){
+            if(val[e]==x) return true;
+        }
+        return false;
+    }
+}ha;
+
