@@ -75,8 +75,8 @@ struct SAM {
         np->num = 1;
         np->ml = loc;
         while (p && !p->ch[c]) {
-            p = p->f;
             p->ch[c]=np;
+            p = p->f;
         }
         last = np;
         if(!p) {
@@ -91,8 +91,8 @@ struct SAM {
                 newNode->ml = p->ml + 1;
                 q->f = np->f = newNode;
                 while (p && p->ch[c] == q) {
-                    p = p->f;
                     p->ch[c] = newNode;
+                    p = p->f;
                 }
             }
     }

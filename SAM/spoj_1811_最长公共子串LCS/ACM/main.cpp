@@ -78,7 +78,7 @@ struct SAM {
     
     void build() {
         last = head = need(++tot);
-        n = strlen(str);
+        n = (int)strlen(str);
         for(int i = 0; i < n; ++i) add(str[i] - 'a', i + 1);
     }
     void look(char s[]) {

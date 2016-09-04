@@ -35,15 +35,14 @@
 using namespace std;
 
 typedef long long lld;
-const int N = 251000, M = 3010100, inf = 0x7fffffff;
+const int N = 101000, M = 3010100, inf = 0x7fffffff;
 const lld llinf = 0x7fffffff7fffffffll;
 
 struct Node{
     Node *ch[26], *f;
-    int ml, multiLCS, LCS;
+    int ml, LCS;
 };
-char s[N];
-int dp[N];
+char s[10][N];
 vector<int> g[N];
 struct SAM {
     Node pool[N * 2], *last, *head;
@@ -67,16 +66,14 @@ struct SAM {
     Node* need(int t, Node* p) {
         need(t);
         pool[t] = *p;
-        pool[t].LCS = 0; //很关键
-        pool[t].multiLCS = 0;
         return pool + t;
     }
     void add(int c, int loc){
         Node *p = last, *np = need(++tot);
         np->ml = loc;
         while (p && !p->ch[c]) {
-            p = p->f;
             p->ch[c]=np;
+            p = p->f;
         }
         last = np;
         if(!p) {
@@ -91,8 +88,8 @@ struct SAM {
                 newNode->ml = p->ml + 1;
                 q->f = np->f = newNode;
                 while (p && p->ch[c] == q) {
-                    p = p->f;
                     p->ch[c] = newNode;
+                    p = p->f;
                 }
             }
     }
@@ -101,12 +98,13 @@ struct SAM {
         last = head = need(++tot);
         n = (int)strlen(str);
         for(int i = 0; i < n; ++i) add(str[i] - 'a', i + 1);
+        topsSort();
     }
     void look(char s[]) {
         Node *p = head;
         int len = 0;
         for (int i = 0; i <= tot; ++i) {
-            
+            pool[i].LCS = 0;
         }
         
         for (int i = 0; s[i] != '\0'; ++i) {
@@ -129,9 +127,21 @@ struct SAM {
                     len = 0;
                 }
             }
-            if (p != head) {
-                p->multiLCS =
+            p->LCS = max(p->LCS, len);
+            
+        }
+        
+        for (int i = n; i > 0; --i) {
+            for (int j = 0; j < g[i].size(); ++j) {
+                Node *p = pool + g[i][j];
+                if (p->f) {
+                    p->f->LCS = max(p->f->LCS, p->LCS);
+                }
             }
+        }
+        
+        for (int i = 0; i <= tot; ++i) {
+            pool[i].ml = min(pool[i].ml, pool[i].LCS);
         }
     }
     void topsSort() {
@@ -159,16 +169,22 @@ int main(int argc, const char * argv[]) {
     //    return 0;
     //    freopen("input.txt", "r", stdin);
     
-    while (scanf("%s", sam.str) != EOF) {
-        sam.reset();
-        sam.build();
-        sam.count();
-        for (int i = 1; i <= sam.n; ++i) {
-            printf("%d\n", dp[i]);
-        }
+    int cnt = 0;
+    while (scanf("%s", s[cnt]) != EOF) {
+        ++cnt;
     }
     
+    strcpy(sam.str, s[0]);
+    sam.build();
     
+    for (int i = 1; i < cnt; ++i) {
+        sam.look(s[i]);
+    }
+    int ans = 0;
+    for (int i = 1; i <= sam.tot; ++i) {
+        ans = max(ans, sam.pool[i].ml);
+    }
+    cout << ans  << endl;
     
     return 0;
 }
