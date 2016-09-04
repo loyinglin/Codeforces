@@ -40,7 +40,7 @@ const lld llinf = 0x7fffffff7fffffffll;
 
 struct Node{
     Node *ch[26], *f;
-    int ml, LCS;
+    int ml, multiLCS, LCS;
 };
 char s[10][N];
 vector<int> g[N];
@@ -61,6 +61,7 @@ struct SAM {
     
     Node* need(int t){
         memset(pool + t, 0, sizeof(pool[t]));
+        pool[t].multiLCS = N;
         return &pool[t];
     }
     Node* need(int t, Node* p) {
@@ -128,20 +129,21 @@ struct SAM {
                 }
             }
             p->LCS = max(p->LCS, len);
-            
         }
         
         for (int i = n; i > 0; --i) {
             for (int j = 0; j < g[i].size(); ++j) {
                 Node *p = pool + g[i][j];
                 if (p->f) {
-                    p->f->LCS = max(p->f->LCS, p->LCS);
+                    int len = min(p->f->ml, p->LCS); //已经访问过的最长序列
+                    p->f->LCS = max(p->f->LCS, len);
                 }
             }
         }
         
         for (int i = 0; i <= tot; ++i) {
-            pool[i].ml = min(pool[i].ml, pool[i].LCS);
+            pool[i].multiLCS = min(pool[i].multiLCS, pool[i].LCS);
+//            cout << i << " " << pool[i].multiLCS  << " " << pool[i].LCS << endl;
         }
     }
     void topsSort() {
@@ -182,9 +184,186 @@ int main(int argc, const char * argv[]) {
     }
     int ans = 0;
     for (int i = 1; i <= sam.tot; ++i) {
-        ans = max(ans, sam.pool[i].ml);
+        if (sam.pool[i].multiLCS != N) {
+            ans = max(ans, sam.pool[i].multiLCS);
+        }
     }
     cout << ans  << endl;
     
     return 0;
 }
+
+
+
+/*
+ #include<cstdio>
+ #include<cmath>
+ #include<stack>
+ #include<map>
+ #include<set>
+ #include<queue>
+ #include<deque>
+ #include<string>
+ #include<utility>
+ #include<sstream>
+ #include<cstring>
+ #include<iostream>
+ #include<algorithm>
+ using namespace std;
+ 
+ typedef long long lld;
+ const int N = 101000, M = 3010100, inf = 0x7fffffff;
+ const lld llinf = 0x7fffffff7fffffffll;
+ 
+ struct Node{
+ Node *ch[26], *f;
+ int ml, LCS;
+ };
+ char s[10][N];
+ vector<int> g[N];
+ struct SAM {
+ Node pool[N * 2], *last, *head;
+ char str[N];
+ int tot, n, maxLen;
+ SAM() {
+ reset();
+ }
+ 
+ void reset() {
+ tot = 0;
+ maxLen = 0;
+ n = 0;
+ last = head = NULL;
+ }
+ 
+ Node* need(int t){
+ memset(pool + t, 0, sizeof(pool[t]));
+ return &pool[t];
+ }
+ Node* need(int t, Node* p) {
+ need(t);
+ pool[t] = *p;
+ return pool + t;
+ }
+ void add(int c, int loc){
+ Node *p = last, *np = need(++tot);
+ np->ml = loc;
+ while (p && !p->ch[c]) {
+ p->ch[c]=np;
+ p = p->f;
+ }
+ last = np;
+ if(!p) {
+ np->f = head;
+ }
+ else
+ if(p->ch[c]->ml == p->ml + 1) {
+ np->f = p->ch[c];
+ }
+ else{
+ Node *q = p->ch[c], *newNode = need(++tot, q);
+ newNode->ml = p->ml + 1;
+ q->f = np->f = newNode;
+ while (p && p->ch[c] == q) {
+ p->ch[c] = newNode;
+ p = p->f;
+ }
+ }
+ }
+ 
+ void build() {
+ last = head = need(++tot);
+ n = (int)strlen(str);
+ for(int i = 0; i < n; ++i) add(str[i] - 'a', i + 1);
+ topsSort();
+ }
+ void look(char s[]) {
+ Node *p = head;
+ int len = 0;
+ for (int i = 0; i <= tot; ++i) {
+ pool[i].LCS = 0;
+ }
+ 
+ for (int i = 0; s[i] != '\0'; ++i) {
+ int id = s[i] - 'a';
+ if (p->ch[id]) {
+ p = p->ch[id];
+ ++len;
+ }
+ else {
+ while (p) {
+ if (p->ch[id]) {
+ len = p->ml + 1;
+ p = p->ch[id];
+ break;
+ }
+ p = p->f;
+ }
+ if (!p) {
+ p = head;
+ len = 0;
+ }
+ }
+ p->LCS = max(p->LCS, len);
+ 
+ }
+ 
+ for (int i = n; i > 0; --i) {
+ for (int j = 0; j < g[i].size(); ++j) {
+ Node *p = pool + g[i][j];
+ if (p->f) {
+ p->f->LCS = max(p->f->LCS, p->LCS);
+ }
+ }
+ }
+ 
+ for (int i = 0; i <= tot; ++i) {
+ pool[i].ml = min(pool[i].ml, pool[i].LCS);
+ }
+ }
+ void topsSort() {
+ for (int i = 1; i <= n; ++i) {
+ g[i].clear();
+ }
+ for (int i = 1; i <= tot; ++i) {
+ g[pool[i].ml].push_back(i);
+ }
+ }
+ }sam;
+ 
+ 
+ 
+ int main(int argc, const char * argv[]) {
+ // insert code here...
+ //    freopen("input.txt", "w", stdout);
+ //    for (int i = 0; i < 250000; ++i) {
+ //        putchar(arc4random_uniform(26) + 'a');
+ //    }
+ //    cout << endl;
+ //    for (int i = 0; i < 250000; ++i) {
+ //        putchar(arc4random_uniform(26) + 'a');
+ //    }
+ //    return 0;
+ //    freopen("input.txt", "r", stdin);
+ 
+ int cnt = 0;
+ while (scanf("%s", s[cnt]) != EOF) {
+ ++cnt;
+ }
+ 
+ strcpy(sam.str, s[0]);
+ sam.build();
+ 
+ for (int i = 1; i < cnt; ++i) {
+ sam.look(s[i]);
+ }
+ int ans = 0;
+ for (int i = 1; i <= sam.tot; ++i) {
+ ans = max(ans, sam.pool[i].ml);
+ }
+ cout << ans  << endl;
+ 
+ return 0;
+ }
+
+*/
