@@ -7,7 +7,25 @@
 
 /************************** 题解 **********************
     题目链接：http://codeforces.com/contest/707/problem/A
-    题目大意：字符中存在C M Y为混色，否则为黑白，输出对应的描述。
+    题目大意：输入n * m个字符，字符中存在C M Y为混色，否则为黑白，输出对应的描述。
+ 
+ Examples
+ input
+ 2 2
+ C M
+ Y Y
+ output
+ #Color
+ 
+ input
+ 3 2
+ W W
+ W W
+ B B
+ output
+ #Black&White
+ 
+ 
     题目解析：
  难度在读题，黑白不仅仅是W B，还有G。
  
