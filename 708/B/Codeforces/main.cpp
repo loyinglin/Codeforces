@@ -7,17 +7,20 @@
 
 /************************** 题解 **********************
  题目链接：http://codeforces.com/contest/708/problem/B
- 题目大意：一个由字符'0'和字符'1'组成的字符串，给出所有长度为2的子序列（不是子串）中，a00, a01, a10, a11的数量。构造一个字符串满足条件条件。如果没有就输出”Impossible“。
+ 题目大意：一个由字符'0'和字符'1'组成的字符串，给出所有长度为2的子序列（不是子串）中，a00, a01, a10, a11的数量。
+ 构造一个字符串满足条件条件。如果没有就输出”Impossible“。
  数字范围为 10e9。
  
- 输入：1 2 2 1
- 输出：0110
- 
+ >Examples
  input
  1 2 3 4
  output
- Impossible
  
+ >Impossible
+ input
+ 1 2 2 1
+ output
+ 0110
  
  
  题目解析：
@@ -75,21 +78,7 @@ int main(int argc, const char * argv[]) {
         cout << "0" << endl;
         return 0;
     }
-    //    if (sum == 1) {
-    //        if (a == 1) {
-    //            puts("00");
-    //        }
-    //        if (b == 1) {
-    //            puts("01");
-    //        }
-    //        if (c == 1) {
-    //            puts("10");
-    //        }
-    //        if (d == 1) {
-    //            puts("11");
-    //        }
-    //        return 0;
-    //    }
+    
     bool flag = 1;
     lld i = 0, j, n = 1; //i表示0的数量 j表示1的数量
     while (n * (n - 1) / 2 < sum) {
