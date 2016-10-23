@@ -7,10 +7,16 @@
 /************************** 题解 **********************
  题目链接：
  题目大意：
- ∙ PUSH x：pushx到栈顶；
+ 给出一个栈，现在进行下面四种操作：
+ ∙ PUSH x：push x（x只能是0或者1）到栈顶；
  ∙ POP： 弹出栈顶；
- ∙REVERSE： 反转栈；
- ∙QUERY：就是从栈顶到栈底进行自定义的操作。
+ ∙REVERSE： 反转栈，top变成bottom，bottom变成top；
+ ∙QUERY：对top,top-1,top-2, ... , bottom 进行**NAND**操作，并输出结果（栈内数字不变）
+ **NAND**的操作如下：
+  0 nand 0 = 1∙
+  0 nand 1 = 1∙
+  1 nand 0 = 1∙
+  1 nand 1 = 0.
  
  
  Sample Input
@@ -48,7 +54,6 @@
  size>1，假设连续的1个数为t，如果size-t<2,则这部分可以忽略；（因为可能为1个0，或者没有，都没影响）
  size-t>=2,则t=t+1;（长度加1）
  最后ans = (t+1)%2;
- 
  
  
  每个值存三个信息，left, right, value.

@@ -46,7 +46,5 @@ int main(int argc, const char * argv[]) {
         printf("Case #%d: %lld\n", i, (n + 1) * n / 2 - 1);
     }
     
-    
-    
     return 0;
 }

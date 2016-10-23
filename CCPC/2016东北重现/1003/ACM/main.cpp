@@ -5,14 +5,28 @@
 //  Created by 林伟池 on 16/9/4.
 //  Copyright &#169; 2016年 林伟池. All rights reserved.
 /************************** 题解 **********************
- 题目链接：http://acm.hdu.edu.cn/contests/contest_showproblem.php?pid=1001&cid=729
- 题目大意：n个点，从1到n。两点的边权值为两个顶点的最小公倍数，求出在n个点的完全图中，最小生成树的最小代价。
+ 题目链接：http://acm.hdu.edu.cn/contests/contest_showproblem.php?pid=1003&cid=729
+ 题目大意：
+ 给出A，B 2个整数，要求：
+ 找到所有A≤C≤B, A≤D≤B ，且 A/B+B/A≤C/D+D/C的CD，并输出。
  
- 样例解释：
+ Sample Input
+ 2
+ 10 10
+ 9 27
  
+ Sample Output
+ Case #1:
+ 1
+ 10 10
+ Case #2:
+ 2
+ 9 27
+ 27 9
+
  
  题目解析：
- 以1为中心即可，1~n的求和公式-1得到答案。
+ 
  
  ************************* 题解 ***********************/
 #include<cstdio>
