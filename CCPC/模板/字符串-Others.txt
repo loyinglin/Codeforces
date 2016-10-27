@@ -1,0 +1,267 @@
+******************KMP*******************
+
+int next[N];
+char s[N], str[N];
+void getNext(char *s){
+//    next[j] = max(k : 0 < k < j  s[0...k - 1] = s[j - k, j - 1]
+//    最长后缀的长度等于相同字符序列的前缀
+    int n = strlen(s);
+    int i = 0, j = -1;
+    next[0] = -1;
+    while(i < n){
+        if(j == -1 || s[i] == s[j])
+        i++, j++, next[i] = j;
+        else
+        j = next[j];
+    }
+}
+
+int main(){
+    while(scanf("%s", s) != EOF){
+        scanf("%s", str);
+        getNext(s);
+        int n = strlen(s), m = strlen(str);
+        int i = 0, j = 0;
+        while(i < m){
+            if(j == -1 || str[i] == s[j])
+            i++, j++;
+            else
+            j = next[j];
+        }
+        if(j == 0) cout << j << endl;
+        else{
+            string ss(s, s + j);
+            cout << ss << ' ' << j << endl;
+        }
+    }
+}
+
+
+******************AC自动机******************
+struct tim{
+    int word;
+    tim *ch[26], *fail;
+}node[N];
+char s[N], str[N];
+int cnt;
+tim *head;
+
+tim* need(int t){
+    memset(node + t, 0, sizeof(tim));
+    return &node[t];
+}
+void insert(char s[]){				//字典树建树
+    tim *p = head;
+    for(int i = 0; s[i]; i++){
+        int id = s[i] - 'a';
+        if(!p->ch[id]) p->ch[id] = need(++cnt);
+        p = p->ch[id];
+    }
+    p->word++;
+}
+void build(){
+    queue<tim*> q;
+    q.push(head);
+    while(!q.empty()){
+        tim *p = q.front();
+        q.pop();
+        for(int i = 0; i < 26; i++){
+            tim *fail = (p == head) ? head : p->fail->ch[i];    //如果为头指针，则失败时指向自己
+            if(!p->ch[i]) p->ch[i] = fail;  //很方便的一点
+            else{
+                p->ch[i]->fail = fail;
+                q.push(p->ch[i]);
+            }
+        }
+    }
+}
+int look(char str[]){
+    int sum = 0;
+    tim *p = head;
+    for(int i = 0; str[i]; i++){
+        int id = str[i] - 'a';
+        p = p->ch[id];
+        tim* tp = p;
+        while(tp != head)
+        if(tp->word > 0)
+        sum += tp->word, tp->word = 0;
+        else
+        tp = tp->fail;
+    }
+    return sum;
+}
+
+
+******************manachar******************
+
+const int maxn = 1010100;
+char s[maxn * 2], str[maxn * 2];
+int p[maxn * 2];
+
+void manachar(int n){
+    int id, mx=0;
+    for(int i = 1; i < n; i++){
+        if(mx > i) p[i] = min(p[2 * id - i], mx - i);
+        else p[i] = 1;
+        while(str[i + p[i]] == str[i - p[i]]) p[i]++;
+        if(p[i] + i > mx) mx = p[i] + i, id = i;
+    }
+}
+int main(){
+    while(scanf("%s", s) != EOF){
+        str[0] = '@';
+        int i, j;
+        for(i = 0, j = 1; s[i]; i++){
+            str[j++] = '#';
+            str[j++] = s[i];
+        }
+        str[j++] = '#';
+        int n = j;
+        manachar(n);
+        int ans = 0;
+        for(i = 1; i < n; i++) ans = max(ans, p[i] - 1);
+        printf("%d\n", ans);
+    }
+}
+
+******************后缀自动机******************
+max：即代码中 val 变量，它表示该状态能够接受的最长的字符串长度。
+min：表示该状态能够接受的最短的字符串长度。实际上等于该状态的 par 指针指向的结点的 val + 1。
+max-min+1：表示该状态能够接受的不同的字符串数。
+right：即 end-set 的个数，表示这个状态在字符串中出现了多少次，该状态能够表示的所有字符串均出现过 right 次。
+par：par 指向了一个能够表示当前状态表示的所有字符串的最长公共后缀的结点。所有的状态的 par 指针构成了一个 parent 树，恰好是字符串的逆序的后缀树。
+parent 树的拓扑序：序列中第i个状态的子结点必定在它之后，父结点必定在它之前。
+struct Node{
+    Node *ch[26], *f;
+    int ml, multiLCS, LCS;
+};
+char s[10][N];
+vector<int> g[N];
+struct SAM {
+    Node pool[N * 2], *last, *head;
+    char str[N];
+    int tot, n, maxLen;
+    SAM() {
+        reset();
+    }
+    void reset() {
+        tot = 0;
+        maxLen = 0;
+        n = 0;
+        last = head = NULL;
+    }
+    Node* need(int t){
+        memset(pool + t, 0, sizeof(pool[t]));
+        pool[t].multiLCS = N;
+        return &pool[t];
+    }
+    Node* need(int t, Node* p) {
+        need(t);
+        pool[t] = *p;
+        return pool + t;
+    }
+    void add(int c, int loc){
+        Node *p = last, *np = need(++tot);
+        np->ml = loc;
+        while (p && !p->ch[c]) {
+            p->ch[c]=np;
+            p = p->f;
+        }
+        last = np;
+        if(!p) {
+            np->f = head;
+        }
+        else
+            if(p->ch[c]->ml == p->ml + 1) {
+                np->f = p->ch[c];
+            }
+            else{
+                Node *q = p->ch[c], *newNode = need(++tot, q);
+                newNode->ml = p->ml + 1;
+                q->f = np->f = newNode;
+                while (p && p->ch[c] == q) {
+                    p->ch[c] = newNode;
+                    p = p->f;
+                }
+            }
+    }
+    void build() {
+        last = head = need(++tot);
+        n = (int)strlen(str);
+        for(int i = 0; i < n; ++i) add(str[i] - 'a', i + 1);
+        topsSort();
+    }
+    void look(char s[]) {
+        Node *p = head;
+        int len = 0;
+        for (int i = 0; i <= tot; ++i) {
+            pool[i].LCS = 0;
+        }
+        for (int i = 0; s[i] != '\0'; ++i) {
+            int id = s[i] - 'a';
+            if (p->ch[id]) {
+                p = p->ch[id];
+                ++len;
+            }
+            else {
+                while (p) {
+                    if (p->ch[id]) {
+                        len = p->ml + 1;
+                        p = p->ch[id];
+                        break;
+                    }
+                    p = p->f;
+                }
+                if (!p) {
+                    p = head;
+                    len = 0;
+                }
+            }
+            p->LCS = max(p->LCS, len);
+        }
+        
+        for (int i = n; i > 0; --i) {
+            for (int j = 0; j < g[i].size(); ++j) {
+                Node *p = pool + g[i][j];
+                if (p->f) {
+                    int len = min(p->f->ml, p->LCS); //已经访问过的最长序列
+                    p->f->LCS = max(p->f->LCS, len);
+                }
+            }
+        }
+        
+        for (int i = 0; i <= tot; ++i) {
+            pool[i].multiLCS = min(pool[i].multiLCS, pool[i].LCS);
+        }
+    }
+    void topsSort() {
+        for (int i = 1; i <= n; ++i) {
+            g[i].clear();
+        }
+        for (int i = 1; i <= tot; ++i) {
+            g[pool[i].ml].push_back(i);
+        }
+    }
+}sam;
+
+int main(int argc, const char * argv[]) {
+    int cnt = 0;
+    while (scanf("%s", s[cnt]) != EOF) {
+        ++cnt;
+    }
+    strcpy(sam.str, s[0]);
+    sam.build();
+    
+    for (int i = 1; i < cnt; ++i) {
+        sam.look(s[i]);
+    }
+    int ans = 0;
+    for (int i = 1; i <= sam.tot; ++i) {
+        if (sam.pool[i].multiLCS != N) {
+            ans = max(ans, sam.pool[i].multiLCS);
+        }
+    }
+    cout << ans  << endl;
+    return 0;
+}
+

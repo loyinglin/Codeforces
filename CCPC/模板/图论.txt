@@ -1,0 +1,86 @@
+******************SPFA*******************
+struct Edge
+{
+    lld s, t, c;
+    lld next;
+}e[M];
+lld cnt;
+lld sumFlow;
+lld pre[N], dist[N], eat[N];
+lld inq[N], vt[N], a[N], b[N], c[N], d[N], x[N];
+void init()
+{
+    cnt = 0;
+    memset(pre, -1, sizeof(pre));
+}
+void addedge(lld s, lld t, lld c)
+{
+    e[cnt].s = s, e[cnt].t = t, e[cnt].c = c, e[cnt].next = pre[s];
+    pre[s] = cnt++;
+}
+lld SPFA(lld s, lld t, lld n)
+{
+    queue <lld> q;
+    memset(inq, 0, sizeof(inq));
+    memset(eat, -1, sizeof(eat));
+    memset(vt, 0 ,sizeof(vt));
+    for(lld i = 0; i <= n; i ++) dist[i] = inf;
+    inq[s] = 1;
+    vt[s]++;
+    dist[s] = 0;
+    q.push(s);
+    while(!q.empty()){
+        lld u = q.front();
+        q.pop();
+        inq[u] = 0;
+        if(vt[u] > n) break;
+        for(lld i = pre[u]; i != -1; i = e[i].next){
+            lld v = e[i].t;
+            if(dist[v] > dist[u] + e[i].c){
+                dist[v] = dist[u] + e[i].c;
+                eat[v] = i;
+                if(!inq[v]){
+                    q.push(v);
+                    vt[v]++;
+                    inq[v] = 1;
+                }
+            }
+        }
+    }
+    if(dist[t] == inf || !q.empty()) return inf;
+    return dist[t];
+}
+
+
+******************强连通分量*******************
+stack<int> S;  
+vector<int> g[N];
+int sv[N], dfn[N], low[N];
+int in[N], out[N], num[N];
+int id; //连通分支个数
+void dfs(int u, int dep){
+    low[u] = dfn[u] = dep;  
+    S.push(u);       
+    for(int i = 0; i < g[u].size(); ++i){
+        int v = g[u][i];
+        if(dfn[v] == -1) dfs(v, dep + 1);
+        if(sv[v] == -1) low[u] = min(low[u], low[v]);  // 判断不可少
+    }
+    if(low[u] == dfn[u]){
+        ++id;
+        while(S.top() != u){
+            sv[S.top()] = id;
+            S.pop();
+        }
+        sv[S.top()] = id;
+        S.pop();
+    }
+}
+int tarjan(int n){
+    while(!S.empty()) S.pop();
+    memset(dfn, -1, sizeof(dfn));
+    memset(sv, -1, sizeof(sv));
+    id = 0;
+    for(int i = 1; i <= n; ++i) if (dfn[i] == -1) dfs(i, 0);
+    return id;
+}
