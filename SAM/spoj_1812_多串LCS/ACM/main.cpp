@@ -51,14 +51,12 @@ struct SAM {
     SAM() {
         reset();
     }
-    
     void reset() {
         tot = 0;
         maxLen = 0;
         n = 0;
         last = head = NULL;
     }
-    
     Node* need(int t){
         memset(pool + t, 0, sizeof(pool[t]));
         pool[t].multiLCS = N;
@@ -94,7 +92,6 @@ struct SAM {
                 }
             }
     }
-    
     void build() {
         last = head = need(++tot);
         n = (int)strlen(str);
@@ -107,7 +104,6 @@ struct SAM {
         for (int i = 0; i <= tot; ++i) {
             pool[i].LCS = 0;
         }
-        
         for (int i = 0; s[i] != '\0'; ++i) {
             int id = s[i] - 'a';
             if (p->ch[id]) {
@@ -170,7 +166,6 @@ int main(int argc, const char * argv[]) {
     //    }
     //    return 0;
     //    freopen("input.txt", "r", stdin);
-    
     int cnt = 0;
     while (scanf("%s", s[cnt]) != EOF) {
         ++cnt;
