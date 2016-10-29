@@ -1,146 +1,156 @@
 #include <iostream>
+#include <algorithm>
+#include <cstdio>
+#include <cstring>
 #include <vector>
-
 using namespace std;
 
-const int MAX_N = 1024;
+typedef long long lld;
+const int N = 100010;
+const int M = 20*N;
+vector<int> vec[M];
+int vecnum = 0;
+int id[20][N];
 
-int n, t;
-bool a[MAX_N][MAX_N];
-int inT1[MAX_N];
-int b[MAX_N];
-int t1[MAX_N];
-int t2[MAX_N];
-int len1;
-int len2;
-
-int GetPos(int *seq, int len, int num)
-{
-    int pos = -1;
-    for(int i = 0; i < len; ++i)
-    {
-        if(a[num][seq[i]] == 1)
-            pos = i;
-        else if(pos >= 0)
-            return -2;
+char s[N];
+void build(int n) {
+    while (vecnum) vec[vecnum--].clear(); // from 1
+    vector<pair<char, int> > vt;
+    for (int i = 1; i <= n; ++ i) {
+        vt.push_back(make_pair(s[i], i));
     }
-    return pos;
-}
-
-bool Insert(int *seq, int &len, int num)
-{
-    int pos = GetPos(seq, len, num);
-    if(pos == -2)
-        return false;
-    else if(pos == -1)
-        seq[len++] = num;
-    else
-    {
-        for(int i = len; i > pos; --i)
-        {
-            seq[i] = seq[i-1];
-        }
-        seq[pos] = num;
-        len++;
+    sort(vt.begin(), vt.end());
+    char last = 0;
+    for (int i = 0; i < vt.size(); ++ i) {
+        if(last!=vt[i].first)
+            ++vecnum;
+        vec[vecnum].push_back(vt[i].second);
+        id[0][vt[i].second] = vecnum;
+        last=vt[i].first;
     }
     
+    for (int j = 1; (1<<j) <= n; ++ j) {
+        vector<pair<lld, int> > vt;
+        for (int i = 1; i + (1<<j)-1 <= n; ++ i) {
+            vt.push_back(make_pair(1LL*id[j-1][i]*M+id[j-1][i+(1<<(j-1))], i));
+        }
+        sort(vt.begin(), vt.end());
+        lld last = -1;
+        for (int i = 0; i < vt.size(); ++ i) {
+            if(last!=vt[i].first)
+                ++vecnum;
+            vec[vecnum].push_back(vt[i].second);
+            id[j][vt[i].second] = vecnum;
+            last=vt[i].first;
+        }
+    }
+    
+    
+    //    for (int j = 0; (1<<j) <= n; ++ j) {
+    //        for (int i = 1; i + (1<<j)-1 <= n; ++ i) {
+    //            printf("%d\t", id[j][i]);
+    //        }
+    //        puts("");
+    //    }
+    
+    
+}
+bool same (int a, int b, int len) {
+    for (int i = 0; i < 20; ++ i) if (len&(1<<i)) {
+        if (id[i][a]!=id[i][b]) return false;
+        a+=(1<<i);
+        b+=(1<<i);
+    }
     return true;
 }
-
-int BinSearch(int arr[], int len, int num)
-{
-    int start = 0;
-    int end = len - 1;
-    while(start <= end)
-    {
-        int mid = start + end >> 1;
-        if(arr[mid] <= num)
-            start = mid + 1;
-        else if(arr[mid] > num)
-            end = mid - 1;
+int query(int l, int r) {
+    if(l==r)return 1;
+    if(l==r-1) {
+        if(s[l]==s[r])return 1;
+        else return 2;
     }
-    return start;
+    int k = 20;
+    while ((1<<k) >= r-l+1) k--; //[len/2, len)
+    //cout<<"K " << k << endl;
+    int num = id[k][l];
+    auto it = lower_bound(vec[num].begin(), vec[num].end(), l+1);
+    //    for (int i = 0; i < vec[num].size(); ++ i) {
+    //        cout << vec[num][i] << " ";
+    //    }cout << "VECEND"<<endl;
+    //
+    if(it!=vec[num].end() && (*it)+(1<<k)-1<=r) {
+        //cout<<"IT "<<*it<<endl;
+        if(same(l, *it, r-(*it)+1)) return *it-l;
+    }
+    //else puts("OUT");
+    while (k--) {
+        //cout<<"NOWK" << k << endl;
+        num = id[k][l];
+        //        for (int i = 0; i < vec[num].size(); ++ i) {
+        //            cout << vec[num][i] << " ";
+        //        }cout << "VECEND"<<endl;
+        
+        auto lit1 = lower_bound(vec[num].begin(), vec[num].end(), l);
+        auto lit2 = lower_bound(vec[num].begin(), vec[num].end(), l+(1<<k));
+        int ln = (int)(lit2-lit1);
+        if(ln==0)continue;
+        lit2--;
+        
+        auto rit1 = lower_bound(vec[num].begin(), vec[num].end(), r-(1<<(k+1))+2);
+        auto rit2 = lower_bound(vec[num].begin(), vec[num].end(), r-(1<<k)+2);
+        int rn = (int)(rit2-rit1);
+        if(rn==0)continue;
+        rit2--;
+        
+        int now = 0;
+        
+        if(ln > rn) {
+            now = *rit1;
+        }
+        else if (ln>1) {
+            int p = (*rit2-*rit1)/(rn-1);
+            now = *rit2 - (ln-1)*p;
+            //cout<<"P"<<p<<" "<<now<<endl;
+        }
+        else now = *rit2;
+        if (same(l, now, r-now+1)) return now-l;
+    }
+    return r-l+1;
 }
 
-int GetCount()
-{
-    int sb = 0;
-    for(int i = 0; i < len2; ++i)
-    {
-        int pos = GetPos(t1, len1, t2[i]);
-        if(pos == -2)
-            continue;
-        if(pos == -1)
-            b[sb++] = len1;
-        else
-        {
-            int idx = BinSearch(b, sb, pos);
-            b[idx] = pos;
-            if(idx >= sb)
-                sb++;
+int ansLook(char *str, int n, int p) {
+    for (int i = 1; i + p <= n; ++i) {
+        if (str[i] != str[i + p]) {
+            return 0;
         }
     }
-    return sb;
+    return 1;
 }
 
-int main()
-{
-    while(scanf("%d %d", &n, &t) == 2)
-    {
-        if(n == 0 || t == 0)
-            break;
-        
-        //int ttt[5] = {3, 3, 3, 3, 3};
-        //for(int i = 0; i < 7; ++i)
-        //{
-        //	printf("%d\n", BinSearch(ttt, 5, i));
-        //}
-        len1 = 0;
-        len2 = 0;
-        memset(inT1, 0, sizeof(inT1));
-        
-        char str[2111];
-        getchar();
-        for(int i = 1; i <= n; ++i)
-        {
-            gets(str);
-            for(int j = 1; j <= n; ++j)
-            {
-                char ch = str[j * 2 - 2];
-                a[i][j] = ch - '0';
-            }
-        }
-        
-        bool ret = true;
-        for(int i = 0; i < t; ++i)
-        {
-            int num;
-            scanf("%d", &num);
-            inT1[num] = 1;
-        }
-        
-        for(int i = 1; i <= n; ++i)
-        {
-            if(inT1[i] == 0)
-            {
-                ret &= Insert(t2, len2, i);
-            }
-            else
-            {
-                ret &= Insert(t1, len1, i);
-            }
-            if(!ret) break;
-        }
-        
-        if(ret)
-        {
-            int count = GetCount();
-            printf("YES %d\n", count);
-        }
-        else
-        {
-            printf("NO \n");
+int main () {
+      
+    
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+    
+    int casnum; scanf("%d",&casnum);
+    for (int cas=1;cas<=casnum;++cas) {
+        scanf("%s", s+1);
+        int n = (int)strlen(s+1);
+        build(n);
+        printf("Case #%d:\n",cas);
+        int q;
+        scanf("%d", &q);
+        while (q--) {
+            int l, r; scanf("%d%d",&l,&r);
+            printf("%d\n",query(l,r));
         }
     }
     return 0;
 }
+/*
+ 111
+ aaaaaxaaaaaa
+ 11
+ 1 12
+ */
