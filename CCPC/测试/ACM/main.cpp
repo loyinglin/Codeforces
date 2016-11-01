@@ -1,55 +1,41 @@
-#include <set>
-#include <map>
-#include <stack>
-#include <queue>
-#include <deque>
-#include <cmath>
-#include <vector>
-#include <string>
 #include <cstdio>
-#include <cstdlib>
 #include <cstring>
-#include <iostream>
 #include <algorithm>
+#include <cmath>
 using namespace std;
-#define L(i) i<<1
-#define R(i) i<<1|1
-#define INF  0x3f3f3f3f
-#define pi acos(-1.0)
-#define eps 1e-9
-#define maxn 10010
-#define MOD 1000000007
 
-long long Log(long long x)
-{
-    long long k = -1;
-    while(x)
-    {
-        k++;
-        x >>= 1;
-    }
-    return k;
+#define N 1008
+#define mo 1000000007
+
+int dp[N][N][3][3];
+int a[N];
+
+void add(int &x,int y){
+    x = x + y;
+    if (x >= mo) x -= mo;
 }
-long long solve(long long x,long long y,long long s)
-{
-    long long k = Log(y-x+1);
-    if((1<<k) == y-x+1)
-        return k;
-    long long last = max((long long)0,y+1-(1<<(k+1)));
-    return min(k+1+max((long long)0,x-last-s),k+1+solve(x,y+1-(1<<k),s+1));
-}
-int main()
-{
-    int t,C = 1;
-    scanf("%d",&t);
-    while(t--)
-    {
-        long long p,q;
-        scanf("%lld%lld",&p,&q);
-        if(p <= q)
-            printf("%lld\n",q-p);
-        else
-            printf("%lld\n",solve(q,p,0));
+int main(){
+    int T;
+    scanf("%d",&T);
+    while (T--){
+        int n,s;
+        scanf("%d%d",&n,&s);
+        for (int i=1;i<=n;i++) scanf("%d",&a[i]);
+        memset(dp,0,sizeof(dp));
+        dp[0][0][0][0]=1;
+        for (int i=1;i<=n;i++)
+            for (int j=0;j<=s;j++)
+                for (int s1=0;s1<=2;s1++)
+                    for (int s2=0;s2<=2;s2++){
+                        add(dp[i][j][s1][s2],dp[i-1][j][s1][s2]);
+                        if (j>=a[i]) add(dp[i][j][s1][s2],dp[i-1][j-a[i]][s1][s2]);
+                        if (s1>0 && j>=a[i])
+                            add(dp[i][j][s1][s2],dp[i-1][j-a[i]][s1-1][s2]);
+                        if (s2>0)
+                            add(dp[i][j][s1][s2],dp[i-1][j][s1][s2-1]);
+                    }
+        int ans=0;
+        for (int i=0;i<=s;i++) add(ans,dp[n][i][2][2]);
+        printf("%lld\n",ans*4ll % mo);
     }
-    return 0;
 }

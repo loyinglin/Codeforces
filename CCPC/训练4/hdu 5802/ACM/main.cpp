@@ -35,25 +35,23 @@ typedef long long lld;
 const int Max = 1000100100;
 
 
-lld look(lld t, int add, int rest) { // 把t变为0的消耗
-    if (t == 0) {
-        return 0 + max(add, rest);
+lld look(lld p, lld q, int add, int rest) { // 把t变为0的消耗
+    if (p <= q) {
+        p = max(p, 0LL);
+        return max(add + (q - p), (lld)rest);
     }
-    if (t == 1) {
+    if (p == q + 1) {
         return 1 + max(add, rest);
     }
     lld ret = 1e9;
     lld i = 1;
+    lld t = p - q;
     for (; (1LL << i) - 1 < t; ++i);
     if ((1LL << i) - 1 == t) { // 刚好是最优解
         return i + max(add, rest);
     }
-    ret = min(ret, i - 1 + look(t - (1LL << (i - 1)) + 1, add, rest + 1)); //考虑小于的部分
-    
-    lld addCost = add + (1LL << i) - 1 - t; // 先增加，再减去
-    lld restCost = rest;
-    ret = min(ret, i + max(addCost, restCost)); // 取增加和休息的最大值即可
-    
+    ret = min(ret, i - 1 + look(p - (1LL << (i - 1)) + 1, q, add, rest + 1)); //考虑小于的部分
+    ret = min(ret, i + look(p - (1LL << i) + 1, q, add, rest));
     return ret;
 }
 
@@ -93,21 +91,45 @@ int bfs(int t) {
 }
 
 
+long long Log(long long x)
+{
+    long long k = -1;
+    while(x)
+    {
+        k++;
+        x >>= 1;
+    }
+    return k;
+}
+long long solve(long long x,long long y,long long s)
+{
+    long long k = Log(y-x+1);
+    if((1<<k) == y-x+1)
+        return k;
+    long long last = max((long long)0,y+1-(1<<(k+1)));
+    return min(k+1+max((long long)0,x-last-s),k+1+solve(x,y+1-(1<<k),s+1));
+}
+
+
+
+
 int main(int argc, const char * argv[]) {
-    int t = 20;
+    int t = 1000;
     cin >> t;
     while (t--) {
         int p, q;
         scanf("%d%d", &p ,&q);
-        p = t, q = 0;
+//        p = arc4random_uniform(1000000001), q = arc4random_uniform(1000000001);
+        
         if (p <= q) {
             printf("%d\n", q - p);
         }
         else {
-            printf("%lld\n", look(p - q, 0, 0));
-//            if (look(p - q, 0, 0) != bfs(p - q) || 1) {
+//            cout << p << " " << q << endl;
+            printf("%lld\n", look(p, q, 0, 0));
+//            if (look(p, q, 0, 0) != solve(q, p, 0)) {
 //                cout << p << " " << q << endl;
-//                cout << look(p - q, 0, 0) << " bfs " << bfs(p - q) << endl;
+//                cout << look(p, q, 0, 0) << "  vs " << solve(q, p, 0) << endl;
 //            }
         }
     }
