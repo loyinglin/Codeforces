@@ -84,3 +84,209 @@ int tarjan(int n){
     for(int i = 1; i <= n; ++i) if (dfn[i] == -1) dfs(i, 0);
     return id;
 }
+
+
+******************割点*******************
+割点：如果在图G中删去一个结点u后，图G的连通分枝数增加，即W(G-u)>W(G)，则称结点u为G的割点，又称关节点。
+桥：如果在图G中删去一条边e后，图G的连通分支数增加，即W(G-e)>W(G)，则称边u为G的桥，又称割边或关节边。
+双连通分支：G中不含割点的极大连通子图称为G的双连通分支，又称为G的块。
+
+注意是否有多重边 
+对于边的双连通，若边(u,v)，dfn[u]<low[v]（即不在环内），则为桥。对于点的双连通，若dfn[u]<=low[v]（小于是不在环内的点，等于是环与外界的唯一连接点），或者u为根且u有多个子树（说明u不在环内，因为没有横叉边）则为割点。
+定理:当把边的双连通分支缩点后形成了一个有向无环图，叶子（度为1的点）的个数为n，则需要在原图中添加(n + 1)/2条边，可以使原图变为没有桥的双连通图。
+边的双连通，可以求出桥，不经过桥dfs。
+
+// 割点
+void dfs(int u, int dep){
+    low[u] = dfn[u] = dep;  //访问时间
+    for (int i = 0; i < g[u].size(); ++i) {
+        int v = g[u][i];
+        if(dfn[v] == -1){
+            dfs(v, dep + 1);
+            if(u == root) son++;
+            else{
+                low[u] = min(low[u], low[v]);
+                if(low[v] >= dfn[u]) cut[u]++; //无法回溯到u的父亲节点， 注意无向图的两条有向边，所以有v -> u。须看清题目是否有多重边
+            }
+        }
+        else low[u] = min(low[u], dfn[v]); //回边
+    }
+}
+int tarjan(int n){
+    memset(dfn, -1, sizeof(dfn));
+    ans = 0;
+    for(int i = 0; i < n; i ++)
+    if(dfn[i] == -1){
+        son = 0;
+        root = i;
+        ans++;
+        dfs(root, 0);
+        cut[root] = son - 1;
+    }
+    return 0;
+}
+
+
+// 桥
+void dfs(int u, int dep, int id){
+    low[u] = dfn[u] = dep;  //访问时间
+    for (int i = pre[u]; i != -1; i = e[i].next){
+        int v = e[i].to;
+        if(e[i].id == id) continue;
+        if(dfn[v] == -1) dfs(v, dep + 1, e[i].id);
+        low[u] = min(low[u], low[v]);
+        if(low[v] > dfn[u] && cut[e[i].id] == 0) cut[e[i].id] = 1, ++ans;
+    }
+}
+int tarjan(int n){
+    memset(dfn, -1, sizeof(dfn));
+    memset(cut, 0, sizeof(cut));
+    ans = 0;
+    dfs(1, 0, -1);
+    return 0;
+}
+
+// 强连通分量
+void dfs(int u, int dep){
+    low[u] = dfn[u] = dep;  
+    S.push(u);       
+    for(int i = 0; i < g[u].size(); ++i){
+        int v = g[u][i];
+        if(dfn[v] == -1) dfs(v, dep + 1);
+        if(sv[v] == -1) low[u] = min(low[u], low[v]);  // 判断不可少
+    }
+    if(low[u] == dfn[u]){
+        ++id;
+        while(S.top() != u){
+            sv[S.top()] = id;
+            S.pop();
+        }
+        sv[S.top()] = id;
+        S.pop();
+    }
+}
+int tarjan(int n){
+    while(!S.empty()) S.pop();
+    memset(dfn, -1, sizeof(dfn));
+    memset(sv, -1, sizeof(sv));
+    id = 0;
+    for(int i = 1; i <= n; ++i) if (dfn[i] == -1) dfs(i, 0);
+    return id;
+}
+
+
+******************网络流dinic*******************
+const int N = 310, M = 500000, inf = 100100100; //注意修改点的范围
+struct Edge{
+    int s, t, f, id;
+    int next;
+}e[M];
+int pre[N], tpre[N], dis[N], ans[M], cnt;
+int a[N][N];
+void addedge(int s, int t, int f, int id){ //有上下界的最大流模板
+    e[cnt].s = s, e[cnt].t = t, e[cnt].f = f, e[cnt].id = id, e[cnt].next = pre[s];
+    pre[s] = cnt++;
+    e[cnt].s = t, e[cnt].t = s, e[cnt].f = 0, e[cnt].id = 0, e[cnt].next = pre[t];
+    pre[t] = cnt++;
+}
+int bfs(int s, int t){
+    memset(dis, 0, sizeof(dis));
+    queue<int> q;
+    dis[s] = 1;
+    q.push(s);
+    while(!q.empty()){
+        int id = q.front();
+        q.pop();
+        for(int i = pre[id]; i != -1; i = e[i].next)
+            if(dis[e[i].t] == 0 && e[i].f > 0){
+                dis[e[i].t] = dis[id] + 1;
+                q.push(e[i].t);
+            }
+    }
+    return dis[t] != 0;
+}
+int dfs(int s, int t, int cur_flow){
+    int lev = cur_flow;
+    if(s == t) return cur_flow;
+    for(int &i = tpre[s]; i != -1; i = e[i].next)
+        if(dis[e[i].t] == dis[s] + 1 && e[i].f > 0 && lev > 0){
+            int temp = dfs(e[i].t, t, min(lev, e[i].f));
+            e[i].f -= temp;
+            e[i^1].f += temp;
+            lev -= temp;
+        }
+    return cur_flow - lev;
+}
+int dinic_flow(int s, int t){    //注意是从s到t，故而s最小，t最大
+    int sum = 0;
+    while(bfs(s, t)){
+        int flow;
+        for(int i = s; i <= t; i++) tpre[i] = pre[i];
+        while((flow = dfs(s, t, inf))) sum += flow;
+    }
+    return sum;
+}
+
+void flow_init(){
+    memset(pre, -1, sizeof(pre));
+    memset(ans, 0, sizeof(ans));
+    cnt = 0;
+}
+
+int limit_min_flow(int n, int m, int mid, int k, int &flow){
+    int src = 0, dest = n + 2 * m + 1;
+    for (int i = 1; i <= n; ++i) {
+        addedge(src, i, 1, 0);
+    }
+    if (mid == 1) {
+        for (int i = 1; i <= n; ++i) {
+            for (int j = 1; j <= m; ++j) {
+                if (a[i][j]) {
+                    addedge(i, n + j, 1, 0);
+                }
+                else {
+                    addedge(i, n + m + j, 1, 0);
+                }
+            }
+        }
+    }
+    for (int i = 1; i <= m; ++i) {
+        addedge(n + i, dest, 1, 0);
+        if (mid == 1) {
+            addedge(n + m + i, n + i, k, 0);
+        }
+        
+    }
+    flow += dinic_flow(src, dest);
+    return flow >= mid * n;
+}
+
+
+int main(){
+    int ca = 0, CASE;
+    cin >> CASE;
+    while(CASE--){
+        int n, m, L, k;
+        cin >> n >> m >> L >> k;
+        memset(a, 0, sizeof(a));
+        for (int i = 0; i < L; ++i) {
+            int u, v;
+            cin >> u >> v;
+            a[u][v] = 1;
+        }
+        int ans = 0, flow = 0;
+        flow_init();
+        
+        while (true) {
+            if (limit_min_flow(n, m, ans + 1, k, flow)) {
+                ++ans;
+            }
+            else {
+                break;
+            }
+        }
+        printf("Case %d: %d\n", ++ca, ans);
+    }
+    return 0;
+}
+
