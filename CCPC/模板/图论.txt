@@ -304,96 +304,315 @@ struct Edge
 {
     int s, t, f, c;
     int next;
-}e[M];
-int cnt;
-int sumFlow;
-int pre[N], dist[N], eat[N];
-int inq[N], vt[N];
-void init()
-{
-    cnt = 0;
-    memset(pre, -1, sizeof(pre));
-}
-void addedge(int s, int t, int f, int c)
-{
-    e[cnt].s = s, e[cnt].t = t, e[cnt].f = f, e[cnt].c = c, e[cnt].next = pre[s];
-    pre[s] = cnt++;
-    e[cnt].s = t, e[cnt].t = s, e[cnt].f = 0, e[cnt].c = -c, e[cnt].next = pre[t];
-    pre[t] = cnt++;
-}
-bool SPFA(int s, int t, int n)
-{
-    queue <int> q;
-    memset(inq, 0, sizeof(inq));
-    memset(eat, -1, sizeof(eat));
-    memset(vt, 0 ,sizeof(vt));
-    for(int i = 0; i <= n; i ++) dist[i] = inf;
-    inq[s] = 1;
-    vt[s]++;
-    dist[s] = 0;
-    q.push(s);
-    while(!q.empty()){
-        int u = q.front();
-        q.pop();
-        inq[u] = 0;
-        if(vt[u] > n) break;
-        for(int i = pre[u]; i != -1; i = e[i].next){
-            int v = e[i].t;
-            if(e[i].f && dist[v] > dist[u] + e[i].c){
-                dist[v] = dist[u] + e[i].c;
-                eat[v] = i;
-                if(!inq[v]){
-                    q.push(v);
-                    vt[v]++;
-                    inq[v] = 1;
+};
+char str[N][N];
+vector<pair<int, int> > mV, hV;
+struct MCMF { // minCostMaxFlow
+    int cnt, sumFlow;
+    int pre[N], dist[N], eat[N];
+    int inq[N], vt[N];
+    struct Edge e[M];
+    void reset()
+    {
+        cnt = 0;
+        memset(pre, -1, sizeof(pre));
+    }
+    void addedge(int s, int t, int f, int c)
+    {
+        e[cnt].s = s, e[cnt].t = t, e[cnt].f = f, e[cnt].c = c, e[cnt].next = pre[s];
+        pre[s] = cnt++;
+        e[cnt].s = t, e[cnt].t = s, e[cnt].f = 0, e[cnt].c = -c, e[cnt].next = pre[t];
+        pre[t] = cnt++;
+    }
+    bool SPFA(int s, int t, int n)
+    {
+        queue <int> q;
+        memset(inq, 0, sizeof(inq));
+        memset(eat, -1, sizeof(eat));
+        memset(vt, 0 ,sizeof(vt));
+        for(int i = 0; i <= n; i ++) dist[i] = inf;
+        inq[s] = 1;
+        vt[s]++;
+        dist[s] = 0;
+        q.push(s);
+        while(!q.empty()){
+            int u = q.front();
+            q.pop();
+            inq[u] = 0;
+            if(vt[u] > n) break;
+            for(int i = pre[u]; i != -1; i = e[i].next){
+                int v = e[i].t;
+                if(e[i].f && dist[v] > dist[u] + e[i].c){
+                    dist[v] = dist[u] + e[i].c;
+                    eat[v] = i;
+                    if(!inq[v]){
+                        q.push(v);
+                        vt[v]++;
+                        inq[v] = 1;
+                    }
                 }
             }
         }
+        if(dist[t] == inf || !q.empty()) return false;
+        return true;
     }
-    if(dist[t] == inf || !q.empty()) return false;
-    return true;
-}
-int MCMF(int s, int t, int n) // minCostMaxFlow
-{
-    int flow = 0; // 总流量
-    int i, minflow, mincost;
-    mincost = 0;
-    while(SPFA(s, t, n)){
-        minflow = inf + 1;
-        for(i = eat[t]; i != -1; i = eat[e[i].s])
-        if(e[i].f < minflow) minflow = e[i].f;
-        flow += minflow;
-        for(i = eat[t]; i != -1; i = eat[e[i].s]){
-            e[i].f -= minflow;
-            e[i^1].f += minflow;
+    int look(int s, int t, int n)
+    {
+        int flow = 0; // 总流量
+        int i, minflow, mincost;
+        mincost = 0;
+        while(SPFA(s, t, n)){
+            minflow = inf + 1;
+            for(i = eat[t]; i != -1; i = eat[e[i].s])
+                if(e[i].f < minflow) minflow = e[i].f;
+            flow += minflow;
+            for(i = eat[t]; i != -1; i = eat[e[i].s]){
+                e[i].f -= minflow;
+                e[i^1].f += minflow;
+            }
+            mincost += dist[t] * minflow; //单位流量的最小代价dist[t]
         }
-        mincost += dist[t] * minflow; //单位流量的最小代价dist[t]
+        sumFlow = flow; // 题目需要流量，用于判断
+        return mincost;
     }
-    sumFlow = flow; // 题目需要流量，用于判断
-    return mincost;
-}
+}acm;
+
+
 int main()
 {
-    int cas;
-    scanf("%d", &cas);
-    while(cas--){
-        int n, m;
-        scanf("%d%d", &n, &m);
-        init();
-        int src = 0, dest = 2 * n + 1;
-        for(int i = 1; i <= n; i ++){
-            addedge(src, i, 1, 0);
-            addedge(i + n, dest, 1, 0);
+    int n, m;
+    while(cin >> n >> m){
+        if (n + m == 0) {
+            break;
         }
-        for(int i = 1; i <= m; i ++){
-            int u, v, c;
-            scanf("%d%d%d", &u, &v, &c);
-            addedge(u, v + n, 1, c);
+        int src = 0, dest = 222;
+        for (int i = 1; i <= n; ++i) {
+            cin >> (str[i] + 1);
         }
-        int ans = MCMF(src, dest, dest);
+        acm.reset();
+        mV.clear();
+        hV.clear();
+        for (int i = 1; i <= n; ++i) {
+            for (int j = 1; j <= m; ++j) {
+                if (str[i][j] == 'm') {
+                    mV.push_back(make_pair(i, j));
+                    acm.addedge(src, mV.size(), 1, 0);
+                    
+                }
+                if (str[i][j] == 'H') {
+                    hV.push_back(make_pair(i, j));
+                    acm.addedge(hV.size() + 111, dest, 1, 0);
+                }
+            }
+        }
+        
+        for (int i = 0; i < mV.size(); ++i) {
+            for (int j = 0; j < hV.size(); ++j) {
+                acm.addedge(i + 1, 111 + j + 1, inf, abs(mV[i].first - hV[j].first) + abs(mV[i].second - hV[j].second));
+            }
+        }
+        int ans = acm.look(src, dest, dest);
         printf("%d\n", ans);
     }
     return 0;
 }
 
+
+******************二分图匹配*******************
+求二分图匹配可以用最大流(Maximal Flow)或者匈牙利算法(Hungarian Algorithm)。
+//匈牙利算法
+
+struct Hungary {
+    static const int N = 1000;
+    int nx, ny, g[N][N], linker[N];
+    bool used[N];
+    int dfs(int u) {
+        for(int v = 0; v < ny; ++v) {
+            if(g[u][v] && !used[v]) {
+                used[v]=true;
+                if(linker[v] == -1 || dfs(linker[v])) {
+                    linker[v] = u;
+                    return 1;
+                }
+            }
+        }
+        
+        return 0;
+    }
+    int look() {
+        int res = 0;
+        for(int u = 0; u< nx; ++u) {
+            memset(used, 0, sizeof(used));
+            res += dfs(u);
+        }
+        return res;
+    }
+    void reset() {
+        memset(g, 0, sizeof(g));
+        memset(linker, -1, sizeof(linker));
+    }
+    void addEdge(int u, int v) {
+        g[u][v] = 1; //注意，这里是mat[a][b]=mat[b][a]=0
+    }
+}acm;
+
+int main(){
+    int k;
+    while(cin >> k >> acm.nx >> acm.ny, k){
+        acm.reset();
+        for(int i = 1; i <= k; ++i){
+            int a, b;
+            scanf("%d%d", &a, &b);
+            acm.addEdge(a - 1, b - 1);
+        }
+        printf("%d\n", acm.look());
+    }
+}
+
+
+//匈牙利算法的HK实现
+struct HungaryHK {
+    static const int N = 1000, inf = 1<<28;
+    bool bmap[N][N], bmask[N];
+    int nx,ny,dis;
+    int cx[N], cy[N], dx[N], dy[N];
+    
+    bool bfs()
+    {
+        queue<int> q;
+        dis = inf;
+        memset(dx,-1,sizeof(dx));
+        memset(dy,-1,sizeof(dy));
+        for(int i = 0;i < nx; ++i) if(cx[i] == -1) dx[i] = 0, q.push(i); //从未匹配点X[i]出发
+        while(!q.empty()){
+            int u = q.front();
+            q.pop();
+            if(dx[u] > dis) break;
+            for(int v = 0; v < ny; ++v)
+                if(bmap[u][v] && dy[v]== -1){
+                    dy[v] = dx[u] + 1;
+                    if(cy[v] == -1) dis = dy[v]; // 找到未匹配点Y，即是增广路存在
+                    else dx[cy[v]] = dy[v] + 1, q.push(cy[v]);
+                }
+        }
+        return dis != inf;
+    }
+    int dfs(int u)
+    {
+        for(int v = 0; v < ny; ++v){
+            if(!bmask[v] && bmap[u][v] && dy[v] == dx[u]+1){
+                bmask[v]=1;
+                if(cy[v] != -1 && dy[v] == dis) continue;
+                if(cy[v] == -1 || dfs(cy[v])){
+                    cy[v] = u;
+                    cx[u] = v;
+                    return 1;
+                }
+            }
+        }
+        return 0;
+    }
+    int look(){
+        int res = 0;
+        memset(cx, -1, sizeof(cx));
+        memset(cy, -1, sizeof(cy));
+        while(bfs()){
+            memset(bmask, 0, sizeof(bmask));
+            for(int i = 0; i < nx; ++i) if(cx[i]==-1)
+                res += dfs(i);
+        }
+        return res;
+    }
+    
+    void reset() {
+        for(int i = 0; i <= nx; ++i) for(int j = 0; j <= ny; ++j) bmap[i][j] = 0;
+    }
+    
+    void addEdge(int u, int v) {
+        bmap[u][v] = 1; //注意，这里不是mat[a][b]=mat[b][a]=0
+    }
+}acm;
+
+int main(){
+    int k;
+    while(cin >> k >> acm.nx >> acm.ny, k){
+        acm.reset();
+        for(int i = 1; i <= k; ++i){
+            int a, b;
+            scanf("%d%d", &a, &b);
+            acm.addEdge(a - 1, b - 1);
+        }
+        printf("%d\n", acm.look());
+    }
+}
+
+
+//KM算法-二分图最优匹配
+
+struct KM {
+    static const int N = 2010, inf = 10000000;
+    int lx[N], ly[N], mat[N][N];
+    int vx[N], vy[N], link[N], slack[N], a[N];
+    int dfs(int k, int n){
+        vx[k] = 1;
+        for(int i = 1; i <= n; i++){
+            if(vy[i]) continue;
+            int t = lx[k] + ly[i] - mat[k][i];
+            if(t == 0){   //注意此处的虚拟边，权值为零不影响最佳匹配的边，方便遍历
+                vy[i] = 1;
+                if(link[i] == -1 || dfs(link[i], n)){
+                    link[i] = k;
+                    return 1;
+                }
+            }
+            else slack[i] = min(t, slack[i]);
+        }
+        return 0;
+    }
+    int look(int n){
+        for(int i = 1; i <= n; i++) for(int j = 1; j <= n; j++) lx[i] = max(lx[i], mat[i][j]);
+        for(int i = 1; i <= n; i++){
+            for(int j = 1; j <= n; j++) slack[j] = inf;
+            while(true){
+                memset(vx, 0, sizeof(vx));
+                memset(vy, 0, sizeof(vy));
+                if(dfs(i, n)) break;
+                int Min = inf;
+                for(int t = 1; t <= n; t++)
+                    if(!vy[t]) Min = min(Min, slack[t]);
+                for(int t = 1; t <= n; t++)
+                    if(vx[t]) lx[t] -= Min;
+                for(int t = 1; t <= n; t++)
+                    if(vy[t]) ly[t] += Min;
+                    else slack[t] -= Min;
+            }
+        }
+        int sum = 0;
+        for(int i = 1; i <= n; i++)
+            if(link[i] != -1) sum += mat[link[i]][i];
+        return sum;
+    }
+    
+    void reset(int n) {
+        for(int i = 1; i <= n; i++) for(int j = 1; j <= n; j++) mat[i][j] = 0; //初始化, 默认存在权值为0的边, 如果是最小值，要初始化成负无穷
+        for(int i = 1; i <= n; i++) lx[i] = 0;  //初始化,如果最小值需修改-inf
+        memset(link, -1, sizeof(link));
+        memset(ly, 0, sizeof(ly));
+    }
+}acm;
+
+int main(){
+    int n;
+    while(scanf("%d", &n) != EOF){
+        acm.reset(n);
+        for(int i = 1; i <= n; i++) {
+            for(int j = 1; j <= n; j++){
+                scanf("%d", &acm.mat[i][j]);
+            }
+        }
+        int ans = acm.look(n);
+        printf("%d\n", ans);
+    }
+}
+//二分图多重匹配，建模直接网络流。
 
