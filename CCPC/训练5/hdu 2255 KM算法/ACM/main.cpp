@@ -21,68 +21,83 @@
 #include <iostream>
 using namespace std;
 
-struct KM {
-    static const int N = 2010, inf = 10000000;
-    int lx[N], ly[N], mat[N][N];
-    int vx[N], vy[N], link[N], slack[N], a[N];
-    int dfs(int k, int n){
-        vx[k] = 1;
-        for(int i = 1; i <= n; i++){
-            if(vy[i]) continue;
-            int t = lx[k] + ly[i] - mat[k][i];
-            if(t == 0){   //注意此处的虚拟边，权值为零不影响最佳匹配的边，方便遍历
-                vy[i] = 1;
-                if(link[i] == -1 || dfs(link[i], n)){
-                    link[i] = k;
-                    return 1;
+
+struct Node {
+    int word;
+    Node *ch[26], *fail;
+};
+struct Trie {
+    static const int N = 1001000, inf = 10000000; // 注意点的大小
+    char s[N], str[N];
+    struct Node node[N];
+    int cnt;
+    Node *head;
+    Node* need(int t){
+        memset(node + t, 0, sizeof(Node)); // 注意大小写！！
+        return &node[t];
+    }
+    
+    void reset() {
+        cnt = 0;
+        head = need(cnt);
+    }
+    
+    void insert(char s[]){				//字典树建树
+        Node *p = head;
+        for(int i = 0; s[i]; i++){
+            int id = s[i] - 'a';
+            if(!p->ch[id]) p->ch[id] = need(++cnt);
+            p = p->ch[id];
+        }
+        p->word++;
+    }
+    void build(){
+        queue<Node*> q;
+        q.push(head);
+        while(!q.empty()){
+            Node *p = q.front();
+            q.pop();
+            for(int i = 0; i < 26; i++){
+                Node *fail = (p == head) ? head : p->fail->ch[i];    //如果为头指针，则失败时指向自己
+                if(!p->ch[i]) p->ch[i] = fail;  //很方便的一点
+                else{
+                    p->ch[i]->fail = fail;
+                    q.push(p->ch[i]);
                 }
             }
-            else slack[i] = min(t, slack[i]);
         }
-        return 0;
     }
-    int look(int n){
-        for(int i = 1; i <= n; i++) for(int j = 1; j <= n; j++) lx[i] = max(lx[i], mat[i][j]);
-        for(int i = 1; i <= n; i++){
-            for(int j = 1; j <= n; j++) slack[j] = inf;
-            while(true){
-                memset(vx, 0, sizeof(vx));
-                memset(vy, 0, sizeof(vy));
-                if(dfs(i, n)) break;
-                int Min = inf;
-                for(int t = 1; t <= n; t++)
-                    if(!vy[t]) Min = min(Min, slack[t]);
-                for(int t = 1; t <= n; t++)
-                    if(vx[t]) lx[t] -= Min;
-                for(int t = 1; t <= n; t++)
-                    if(vy[t]) ly[t] += Min;
-                    else slack[t] -= Min;
-            }
-        }
+    int look(char str[]){
         int sum = 0;
-        for(int i = 1; i <= n; i++)
-            if(link[i] != -1) sum += mat[link[i]][i];
+        Node *p = head;
+        for(int i = 0; str[i]; i++){
+            int id = str[i] - 'a';
+            p = p->ch[id];
+            Node* tp = p;
+            while(tp != head)
+                if(tp->word > 0)
+                    sum += tp->word, tp->word = 0;
+                else
+                    tp = tp->fail;
+        }
         return sum;
     }
     
-    void reset(int n) {
-        for(int i = 1; i <= n; i++) for(int j = 1; j <= n; j++) mat[i][j] = 0; //初始化, 默认存在权值为0的边, 如果是最小值，要初始化成负无穷
-        for(int i = 1; i <= n; i++) lx[i] = 0;  //初始化,如果最小值需修改-inf
-        memset(link, -1, sizeof(link));
-        memset(ly, 0, sizeof(ly));
-    }
+
 }acm;
 
+
 int main(){
-    int n;
-    while(scanf("%d", &n) != EOF){
-        acm.reset(n);
-        for(int i = 1; i <= n; i++) {
-            for(int j = 1; j <= n; j++){
-                scanf("%d", &acm.mat[i][j]);
-            }
-        }
-        int ans = acm.look(n);
-        printf("%d\n", ans);
+    int cas;
+    cin >> cas;
+    while(cas--){
+        int n;
+        cin >> n;
+        acm.reset();
+        while(n--) scanf("%s", acm.s), acm.insert(acm.s);
+        acm.build();
+        scanf("%s", acm.s);
+        cout << acm.look(acm.s) << endl;
     }
 }
+
