@@ -1,0 +1,70 @@
+
+******************数学*******************
+//费马小定理：已知p是质数且gcd(a, p) = 1，则 a^(p-1) ≡ 1 (mod p),  所以 a*a^(p-2) ≡ 1 (mod p)。
+lld find(lld x) //x在%mod下的逆元
+{
+    lld k = mod - 2, ans = 1;
+    while(k)
+    {
+        if (k & 1) {
+            ans = ans * x % mod;
+        }
+        x = x * x % mod;
+        k >>= 1;
+    }
+    return ans;
+}
+
+// 前n个数的逆元
+Inv[1=1;
+Inv[i]=(LL)Inv[mo%i]*(mo-mo/i)%mo;
+
+//最大公约数
+int gcd(int m,int n){
+    int t;
+    if(m<n){t = n;n = m;m = t;}
+    if(n == 0)
+        return m;
+    else
+        return gcd(n,m % n);
+}
+
+//最小公倍数
+int lcm(int a,int b){
+    return a/gcd(a,b) * b;
+}
+
+//扩展欧几里得
+如果gcd(a，b)=d，则存在m，n，使得d = ma + nb，称呼这种关系为a、b组合整数d，m，n称为组合系数。当d=1时，有 ma + nb = 1 ，此时可以看出m是a模b的乘法逆元，n是b模a的乘法逆元。
+
+
+//hash
+typedef long long lld;
+
+const int N=1301171;
+const int M=44444;
+
+struct Hash{
+    int a[N] , cnt;
+    lld nxt[M],head[N],val[M];
+    void clear(){
+        cnt=1;
+        memset(head ,0,sizeof(head));
+    }
+    void insert(lld x){
+        int p=x%N;
+        if(p<0)p+=N;
+        nxt[cnt]=head[p];
+        val[cnt]=x;
+        head[p]=cnt++;
+    }
+    bool find(lld x){
+        int p=x%N ;
+        if(p<0)p+=N;
+        for(int e=head[p];e;e=nxt[e]){
+            if(val[e]==x) return true;
+        }
+        return false;
+    }
+}ha;
+
