@@ -1,99 +1,51 @@
-#include <cstdio>
-#include <cstring>
-#include <algorithm>
-#include <cmath>
-
-#define fi first
-#define se second
-
+#include<cstdio>
+#include<cstring>
+#include<iostream>
+#include<algorithm>
+#define fo(i,a,b) for(int i=a;i<=b;i++)
+#define fd(i,a,b) for(int i=a;i>=b;i--)
+#define maxn 100005
+#define min(a,b) (((a) < (b)) ? a : b)
+#define max(a,b) (((a) > (b)) ? a : b)
 using namespace std;
 
-const int maxs=25,maxn=25,mo=1e9+7,N=22;
+int f[maxn],g[maxn];
 
-typedef long long LL;
+int l,n,p,t;
 
-typedef double db;
+int head,tail;
 
-typedef pair<int,int> PII;
+int ans;
 
-int n,m,k,s,M,Energy[N],f[N][maxs],g[N][maxs],All[maxs][maxs],Fac[maxn],Fac_Inv[maxn],Inv[maxn],ans;
-
-PII Point[maxs];
-
-char c;
-
-int read()
-{
-    for (c=getchar();c<'0' || c>'9';c=getchar());
-    int x=c-48;
-    for (c=getchar();c>='0' && c<='9';c=getchar()) x=x*10+c-48;
-    return x;
-}
-
-bool cmp(PII a,PII b)
-{
-    return a.fi<b.fi || a.fi==b.fi && a.se<b.se;
-}
-
-void Init()
-{
-    n=read(); m=read(); k=read(); s=read();
-    for (int i=1;i<=k;i++)
-    {
-        Point[i].fi=read()-1; Point[i].se=read()-1;
-    }
-    sort(Point+1,Point+k+1,cmp);
-    Point[++k].fi=n-1; Point[k].se=m-1;
-    Point[0].fi=Point[0].se=0;
-    Fac[0]=Fac_Inv[0]=Fac[1]=Fac_Inv[1]=Inv[1]=1;
-    for (int i=2;i<=n+m;i++)
-    {
-        Fac[i]=(LL)Fac[i-1]*i%mo;
-        Inv[i]=(LL)Inv[mo%i]*(mo-mo/i)%mo;
-        Fac_Inv[i]=(LL)Fac_Inv[i-1]*Inv[i]%mo;
-    }
-    Energy[0]=s;
-    while (s>1) Energy[++M]=s=ceil((db)s/2);
-}
-
-int Comb(int N,int M)
-{
-    return (LL)Fac[N]*Fac_Inv[M]%mo*Fac_Inv[N-M]%mo;
-}
-
-void Work()
-{
-    for (int i=1;i<=k;i++)
-    {
-        f[0][i]=g[0][i]=Comb(Point[i].fi+Point[i].se,Point[i].fi);
-        for (int j=1;j<i;j++)
-            if (Point[i].se>=Point[j].se)
-            {
-                All[j][i]=Comb(Point[i].fi-Point[j].fi+Point[i].se-Point[j].se,Point[i].fi-Point[j].fi);
-                f[0][i]=(f[0][i]+mo-(LL)f[0][j]*All[j][i]%mo)%mo;
+int main(){
+    scanf("%d%d%d%d",&l,&n,&p,&t);
+    head=1;
+    tail=1;
+    f[tail]=0;
+    g[tail]=-t;
+    fo(i,1,n) {
+        int x,y,ans1,ans2;
+        scanf("%d%d",&x,&y);
+        ans1=ans2=0;
+        if (head>1) head--;
+        while (head<=tail && g[head]+t<=y) {
+            int nx=max(x,g[head]+t),ny=y;
+            if (f[head]+(ny-nx)/p>ans1) {
+                ans1=f[head]+(ny-nx)/p;
+                ans2=nx+(ny-nx)/p*p;
             }
-    }
-    for (int i=1;i<=M;i++)
-    {
-        for (int j=i+1;j<=k;j++)
-        {
-            for (int x=i;x<j;x++) if (Point[x].se<=Point[j].se)
-                g[i][j]=(g[i][j]+(LL)f[i-1][x]*All[x][j])%mo;
-            f[i][j]=g[i][j];
-            for (int x=i;x<j;x++) if (Point[x].se<=Point[j].se)
-                f[i][j]=(f[i][j]+mo-(LL)f[i][x]*All[x][j]%mo)%mo;
+            else if (f[head]+(ny-nx)/p==ans1) {
+                ans2=min(ans2,nx+(ny-nx)/p*p);
+            }
+            ++head;
+        }
+        if (ans1>ans) {
+            ans=ans1;
+            tail++;
+            f[tail]=ans1;
+            g[tail]=ans2;
         }
     }
-    ans=0;
-    for (int i=0;i<M;i++) ans=(ans+(LL)Energy[i]*f[i][k]%mo)%mo;
-    ans=(ans+g[M][k])%mo;
-    ans=(LL)ans*Fac[n-1]%mo*Fac[m-1]%mo*Fac_Inv[n+m-2]%mo;
-    printf("%d\n",ans);
-}
-
-int main()
-{
-    Init();
-    Work();
+    printf("%d",ans);
     return 0;
 }
