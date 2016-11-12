@@ -53,23 +53,20 @@ int g[N];
  
  dp[i] 表示到r[i]距离的最多唱次数； count(L)表示距离L能唱的次数；
  g[i] 表示dp[i]取到最优解的时候，最左的距离；
+ 对于所有g[x] + t <= r[x]的x，有：
+ dp[i] = max(dp[i], dp[k] + count(r[i] - g[k] - t));
+ g[i] = g[k] + count * p + t;
+ 
+ 
  容易维护这样一个队列：
  对于i < j, 有  dp[i] > dp[j] 且 g[i] > g[j]；
  
- 证：
- 对于i < j, 必然有 g[i] <= g[j]；
+ 解释：
+ 对于i < j, 有 r[i] < l[j], 必然有 g[i] <= g[j]；
  那么对于dp[j] < dp[i]，我们不放入队列即可；
  
  
- 对于k < i, 如果 l[i] - g[k] >= t；
- dp[i] = max(dp[i], dp[k] + count(r[i] - l[i]));
- g[i] = l[i] + count(r[i] - l[i]) * p;
- 
- 如果l[i] - g[k] < t，有：
- 如果r[i] - g[k] < t ，continue；//不合法
- 如果r[i] - g[k] >= t,
- dp[i] = max(dp[i], dp[k] + count(r[i] - g[k] - t));
- g[i] = g[k] + count * p + t;
+ 对于每个i，根据g[x] + t <= r[x]，更新队列，得到最优解；
  
  */
 int main(int argc, const char * argv[]) {
@@ -79,7 +76,7 @@ int main(int argc, const char * argv[]) {
     for (int i = 1; i <= n; ++i) {
         scanf("%d%d", &l[i], &r[i]);
     }
-    deque<int> q; // dp值从小到大，g[i]值从大到小；
+    deque<int> q; // dp值从大到小，g[i]值从大到小；
     q.push_back(0);
     g[0] = -t;
     int ans = 0;
