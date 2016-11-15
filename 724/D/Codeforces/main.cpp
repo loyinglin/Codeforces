@@ -18,7 +18,7 @@
  题目解析：
  
  贪心：从a开始，从左到右，尽可能贪心向右；可行输出解，不行到下一行；
- 
+ // 记得先走前面可行的解；
  
  ************************* 题解 ***********************/
 #include<cstdio>
@@ -43,33 +43,52 @@ char str[N];
 int sum[26];
 int cnt[26];
 
-
 int main(int argc, const char * argv[]) {
-    int n;
-    cin >> n;
+    int m, n;
+    cin >> m;
     cin >> str;
-    int len = strlen(str);
-    for (int i = 0; str[i] != '\0'; ++i) {
+    n = strlen(str);
+    for (int i = 0; i < n; ++i) {
         sum[str[i] - 'a']++;
     }
     
     for (int i = 0; i < 26; ++i) {
-        int ok = 1, p = n - 1, t = n;
-        while (p < len) {
-            if (str[p] <= 'a' + i) {
-                ++cnt[str[p] - 'a'];
-                p += n;
-                t = n;
-                continue;
+        char c = 'a' + i;
+        int posStart = 0, posEnd = m;
+        while (posEnd <= n) {
+            while (posEnd <= n) { // 去掉前面已经存取过的值
+                int find = 0;
+                for (int j = posEnd - 1; j >= posStart; --j) {
+                    if (str[j] < c) {
+                        posStart = j + 1;
+                        posEnd = posStart + m;
+                        find = 1;
+                        break;
+                    }
+                }
+                if (!find) {
+                    break;
+                }
             }
-            --p;
-            --t;
-            if (t <= 0) {
-                ok = 0;
+            if (posEnd > n) {
+                break;
+            }
+            int find = 0;
+            for (int j = posEnd - 1; j >= posStart; --j) {
+                if (str[j] == c) {
+                    posStart = j + 1;
+                    posEnd = posStart + m;
+                    ++cnt[i];
+                    find = 1;
+                    break;
+                }
+            }
+            if (!find) {
                 break;
             }
         }
-        if (ok) {
+        
+        if (posEnd > n) {
             for (int j = 0; j < i; ++j) {
                 for (int k = 0; k < sum[j]; ++k) {
                     putchar('a' + j);
@@ -80,10 +99,6 @@ int main(int argc, const char * argv[]) {
             }
             puts("");
             break;
-        }
-        else {
-            cnt[i] = sum[i];
-            continue;
         }
     }
     
