@@ -6,7 +6,7 @@
 //  Copyright © 2016年 loying. All rights reserved.
 
 /************************** 题解 **********************
- 题目链接：http://codeforces.com/contest/723/problem/D
+ 题目链接：http://codeforces.com/contest/724/problem/D
  题目大意：
  给出一个字符串s，全小写字母组成；再给出整数m。
  现在让你从s中选择某些位置，把对应位置的字符标记为 绿色；

@@ -59,52 +59,11 @@ lld  p[N];
 lld  ans[N];
 lld  sum[N];
 
-lld find(lld x) {
-    return x == f[x] ? f[x] : f[x] = find(f[x]);
-}
-
 
 int main(int argc, const char * argv
          []) {
     
     int n;
-    cin >> n;
-    for (int i = 1; i <= n; ++i) {
-        cin >> a[i];
-        f[i] = i;
-        sum[i] = -1;
-    }
-    for (int i = 1; i <= n; ++i) {
-        cin >> p[i];
-    }
-    for (int i = n; i >= 1; --i) {
-        lld x = p[i];
-        lld temp = a[x];
-        lld left = find(x);
-        if (left - 1 >= 1) { // 存在左边的节点
-            left = find(left - 1);
-            lld leftSum = sum[left];
-            if (leftSum != -1) {
-                temp += leftSum;
-                f[x] = f[left];
-            }
-        }
-        if (x + 1 <= n) { // 存在右边的节点
-            lld right = x + 1;
-            lld rightSum = sum[right];
-            if (rightSum != -1) {
-                temp += rightSum;
-                f[right] = f[x];
-            }
-        }
-        sum[find(x)] = temp;
-        ans[i - 1] = max(ans[i], sum[f[x]]);
-        
-    }
-    
-    for (int i = 1; i <= n; ++i) {
-        cout << ans[i] << endl;
-    }
     
     
     return 0;

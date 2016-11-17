@@ -1,51 +1,77 @@
 #include<cstdio>
+#include<cmath>
+#include<stack>
+#include<map>
+#include<set>
+#include<queue>
+#include<deque>
+#include<string>
+#include<utility>
+#include<sstream>
 #include<cstring>
 #include<iostream>
 #include<algorithm>
-#define fo(i,a,b) for(int i=a;i<=b;i++)
-#define fd(i,a,b) for(int i=a;i>=b;i--)
-#define maxn 100005
-#define min(a,b) (((a) < (b)) ? a : b)
-#define max(a,b) (((a) > (b)) ? a : b)
+
 using namespace std;
 
-int f[maxn],g[maxn];
+const int maxn=1050;
+int uN,vN;
+int T,n,s;
+int g[maxn][maxn];
+int linker[maxn];
+bool used[maxn];
 
-int l,n,p,t;
+bool dfs(int u){
+    for(int v=0;v<vN;v++)
+        if (g[u][v]&&!used[v]){
+            used[v]=true;
+            if (linker[v]==-1||dfs(linker[v])){
+                linker[v]=u;
+                return true;
+            }
+        }
+    return false;
+}
 
-int head,tail;
-
-int ans;
+int hungary(){
+    int res=0;
+    memset(linker,-1,sizeof(linker));
+    for(int u=0;u<uN;u++){
+        memset(used,false,sizeof(used));
+        if (dfs(u)) res++;
+    }
+    return res;
+}
 
 int main(){
-    scanf("%d%d%d%d",&l,&n,&p,&t);
-    head=1;
-    tail=1;
-    f[tail]=0;
-    g[tail]=-t;
-    fo(i,1,n) {
-        int x,y,ans1,ans2;
-        scanf("%d%d",&x,&y);
-        ans1=ans2=0;
-        if (head>1) head--;
-        while (head<=tail && g[head]+t<=y) {
-            int nx=max(x,g[head]+t),ny=y;
-            if (f[head]+(ny-nx)/p>ans1) {
-                ans1=f[head]+(ny-nx)/p;
-                ans2=nx+(ny-nx)/p*p;
-            }
-            else if (f[head]+(ny-nx)/p==ans1) {
-                ans2=min(ans2,nx+(ny-nx)/p*p);
-            }
-            ++head;
+    scanf("%d",&T);
+    for(int Case=1;Case<=T;Case++){
+        scanf("%d%d",&n,&s);
+        memset(g,0,sizeof(g));
+        if (n<=1000){
+            uN=vN=n;
+            for(int i=s+1;i<=s+n;i++)
+                for(int j=1;j<=n;j++)
+                    if (i%j==0)
+                        g[i-s-1][j-1]=1;
+            if (hungary()==n)
+                printf("Case #%d: Yes\n",Case);
+            else
+                printf("Case #%d: No\n",Case);
         }
-        if (ans1>ans) {
-            ans=ans1;
-            tail++;
-            f[tail]=ans1;
-            g[tail]=ans2;
+        else if (s<=1000){
+            uN=vN=s;
+            for(int i=n+1;i<=n+s;i++)
+                for(int j=1;j<=s;j++)
+                    if (i%j==0)
+                        g[i-n-1][j-1]=1;
+            if (hungary()==s)
+                printf("Case #%d: Yes\n",Case);
+            else
+                printf("Case #%d: No\n",Case);
         }
+        else
+            printf("Case #%d: No\n",Case);
     }
-    printf("%d",ans);
-    return 0;
+    return 0;  
 }

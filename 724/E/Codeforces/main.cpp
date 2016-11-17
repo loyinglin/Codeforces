@@ -6,7 +6,7 @@
 //  Copyright © 2016年 loying. All rights reserved.
 
 /************************** 题解 **********************
- 题目链接：http://codeforces.com/contest/722/problem/C
+ 题目链接：http://codeforces.com/contest/724/problem/E
  题目大意：
  n个城市，单向边；每个城市都会产出p[i]单位的货物；每个城市最多卖出s[i]单位的货物；
  对于所有编号为 i、j的城市（1 <= i < j <= n） 都存在一条边i=>j，能运送一次，最多为c单位；
@@ -22,10 +22,29 @@
  
  解释：不能运输，那么只能卖出1 + 2 + 1 = 4 单位；
  
- 
+ N=1W
  
  
  题目解析：
+ 题目给出的就是网络流，但是N=1w，边的数量非常多；
+ 按照题目给的条件建图：
+ 
+        点           流量
+    src 到 n个城市    p[i]
+ n个城市 到 dest      s[i]
+  i城市 到 i+1的城市   c
+ 
+ 容易知道最大流=最小割，在给出题目中因为所有的城市都存在边到src和dest，
+ 那么必然存在边p[i]或者s[i]为割，而且流量为c的边必然不会在最小割内；
+ （因为如果p[i] 和 s[i]都不在割内，那么点i就和src与dest相连）
+ 
+ 那么问题变成：
+ 
+ dp[i][j] 表示最小割中，前i个城市有j个城市与src相连的最小割容量；
+ dp[i][j] = min(dp[i-1][j-1] + s[i], dp[i-1][j] + j*c + p[i]);
+ 
+ dp[i-1][j-1] + s[i] 表示第i个城市直接连src的边，加入最小割；
+ dp[i-1][j]+ j*c + p[i] 表示i城市连src的边不加入最小割，那么为了断开点i与dest的关系，需要断开前i个点中，所有与src相连的点到i的边（c*j），还有p[i]的边；
  
  
  ************************* 题解 ***********************/
@@ -45,105 +64,35 @@
 using namespace std;
 
 typedef long long lld;
-const int N = 222222, M = 22, K = 2222;
+const int N = 222222, M = 22;
 
-pair<int, int> p[K];
-int f[M][K], g[M][K], ways[K][K], fac[N], fac_inv[N];
-int a[M], cnt;
+int p[N], s[N];
+lld f[N];
 
-const lld mod = 1e9 + 7;
-
-//费马小定理：已知p是质数且gcd(a, p) = 1，则 a^(p-1) ≡ 1 (mod p),  所以 a*a^(p-2) ≡ 1 (mod p)。得到 a^(p-2)是a的逆元
-lld find(lld x) //x在%mod下的逆元
-{
-    lld k = mod - 2, ans = 1;
-    while(k)
-    {
-        if (k & 1) {
-            ans = ans * x % mod;
-        }
-        x = x * x % mod;
-        k >>= 1;
-    }
-    return ans;
-}
-
-
-lld ex_gcd(lld a,lld b,lld &x,lld &y)//扩展欧几里得（扩展gcd）
-{
-    if (a == 0 && b == 0) return -1;
-    if (b == 0) { x = 1; y = 0; return a; }
-    lld d = ex_gcd(b, a % b, y, x);
-    y -= a / b * x;
-    return d;
-}
-
-lld mod_inverse(lld a,lld n)//乘法逆元
-{
-    lld x,y;
-    lld d = ex_gcd(a,n,x,y);
-    return (x % n + n) % n;
-}
-
-int Combine(int n, int m) {
-    return (lld)fac[n] * fac_inv[m] % mod * fac_inv[n - m] % mod;
-}
 
 int main(int argc, const char * argv[]) {
-    int n, m, k, s;
-    cin >> n >> m >> k >> s;
-    for (int i = 1; i <= k; ++i) {
-        cin >> p[i].first >> p[i].second;
-        --p[i].first;
-        --p[i].second;
+    int n, c;
+    cin >> n >> c;
+    for (int i = 1; i <= n; ++i) {
+        cin >> p[i];
     }
-    sort(p + 1, p + 1 + k);
-    p[++k].first = n - 1;
-    p[k].second = m - 1;
-    p[0].first = p[0].second = 0;
-    fac[0] = fac_inv[0] = fac[1] = fac_inv[1] = 1;
-    for (int i = 2;  i <= n + m; ++i) {
-        fac[i] = (lld)fac[i - 1] * i % mod;
-        fac_inv[i] = (lld)fac_inv[i - 1] * find(i) % mod;
+    for (int i = 1; i <= n; ++i) {
+        cin >> s[i];
+        f[i] = 1LL << 62;
     }
-    
-    a[0] = s;
-    while (s > 1) {
-        a[++cnt] = s = (s - s / 2);
-    }
-    
-    for (int i = 1; i <= k; ++i) {
-        f[0][i] = g[0][i] = Combine(p[i].first + p[i].second, p[i].first);
-        for (int j = 1; j < i; ++j) {
-            if (p[i].second >= p[j].second) {
-                ways[j][i] = Combine(p[i].first - p[j].first + p[i].second - p[j].second, p[i].first - p[j].first);
-                f[0][i] = (f[0][i] + mod - (lld)f[0][j] * ways[j][i] % mod) % mod;
-            }
+    for (int i = 1; i <= n; ++i) {
+        for (int j = i; j; --j) {
+            f[j] = min(f[j-1] + s[i], f[j] + (lld)j * c + p[i]);
         }
+        f[0] += p[i];
     }
-    
-    for (int i = 1; i <= cnt; ++i) {
-        for (int j = i + 1; j <= k; ++j) {
-            for (int x = i; x < j; ++x) {
-                if (p[x].second <= p[j].second) {
-                    g[i][j] = (g[i][j] + (lld)f[i - 1][x] * ways[x][j]) % mod;
-                }
-            }
-            f[i][j] = g[i][j];
-            for (int x= i; x < j; ++x) {
-                if (p[x].second <= p[j].second) {
-                    f[i][j] = (f[i][j] + mod - (lld)f[i][x] * ways[x][j] % mod) % mod;
-                }
-            }
-        }
+    lld ans = f[0];
+    for (int i = 1; i <= n; ++i) {
+        ans = min(ans, f[i]);
     }
-    int ans = 0;
-    for (int i = 0; i < cnt; ++i) {
-        ans = (ans + (lld)a[i] * f[i][k] % mod) % mod;
-    }
-    ans = (ans + g[cnt][k]) % mod;
-    ans = (lld)ans * fac[n - 1] % mod * fac[m - 1] % mod * fac_inv[n + m - 2] % mod;
     cout << ans << endl;
+    
+    
     
     return 0;
 }
