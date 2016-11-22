@@ -6,7 +6,7 @@
 //  Copyright © 2016年 loying. All rights reserved.
 
 /************************** 题解 **********************
- 题目链接：http://codeforces.com/contest/723/problem/D
+ 题目链接：http://codeforces.com/contest/723/problem/F
  题目大意：
  无向连通图，n个点m条边，无重边和自环。
  给出两个顶点s、t，两个整数ds 和 dt，构建一个生成树，要求：
@@ -45,6 +45,9 @@
  2、只和t连接，那么连t；
  3、和s、t连接，取剩余度数较大的边；
  （特殊考虑s、t直接相连的情况）
+ 
+ 
+ 那么遍历所有s的边，如果这个边对应的连通块只与s相连
  
  
  ************************* 题解 ***********************/
@@ -142,15 +145,13 @@ int main(int argc, const char * argv[]) {
         if (con[k][0] == 0 && con[k][1] == 1) {
             ans[ant][0] = t;
             ans[ant][1] = v;
-            vis[v] = 1;
+            vis[k] = 1;
             q.push(v);
             ant++;
         }
         else { // 两边都有
-            if (vis[v]) { // 该点没有归属
-                if (v == s) {
-                    <#statements#>
-                }
+            if (!vis[v]) { // 该点没有归属
+                
             }
             ans[ant][0] = t;
             ans[ant][1] = v;
