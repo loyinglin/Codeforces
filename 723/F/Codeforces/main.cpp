@@ -59,6 +59,8 @@
  
  
  ************************* 题解 ***********************/
+
+/*
 #include<cstdio>
 #include<cmath>
 #include<stack>
@@ -236,6 +238,91 @@ int main(int argc, const char * argv[]) {
     
     return 0;
 }
+ */
+#include<cstdio>
+#include<cmath>
+#include<stack>
+#include<map>
+#include<set>
+#include<queue>
+#include<deque>
+#include<string>
+#include<utility>
+#include<sstream>
+#include<cstring>
+#include<iostream>
+#include<algorithm>
+using namespace std;
+const int MAX=4e5+9;
+int a[MAX],b[MAX],s,t,ds,dt,n,m,fa[MAX];
+bool ms[MAX],mt[MAX];
+vector<int> vs,vt;
+vector<pair<int,int> > ans;
+int findfa(int x){return fa[x]==x?x:fa[x]=findfa(fa[x]);}
+
+void merge(int a,int b) {
+    if (a==s) ds--;
+    if (a==t) dt--;
+    fa[findfa(a)]=findfa(b),ans.push_back(make_pair(a,b));
+}
+int main() {
+    
+    ios_base::sync_with_stdio(false),cin.tie(0),cout.tie(0);
+    cin>>n>>m;
+    for (int i=1; i<=n; i++) fa[i]=i;
+    for (int i=1; i<=m; i++) cin>>a[i]>>b[i];
+    cin>>s>>t>>ds>>dt;
+    for (int i=1; i<=m; i++)
+        if (a[i]!=s && a[i]!=t && b[i]!=s && b[i]!=t) {
+            if (findfa(a[i])!=findfa(b[i]))
+                merge(a[i],b[i]);
+        } else {
+            if (a[i]==s) vs.push_back(b[i]);
+            if (b[i]==s) vs.push_back(a[i]);
+            if (a[i]==t) vt.push_back(b[i]);
+            if (b[i]==t) vt.push_back(a[i]);
+        }
+    for (int i=0; i<vs.size(); i++) ms[findfa(vs[i])]=1;
+    mt[t]=1,ms[s]=1;
+    for (int i=0; i<vt.size(); i++) {
+        int x=vt[i];
+        mt[findfa(x)]=1;
+        if (!ms[findfa(x)] && findfa(x)!=findfa(t))
+            merge(x,t),dt--;
+    }
+    for (int i=0; i<vs.size(); i++) {
+        int x=vs[i];
+        if (!mt[findfa(x)] && findfa(x)!=findfa(s))
+            merge(x,s),ds--;
+    }
+    for (int i=0; i<vs.size(); i++) {
+        int x=vs[i];
+        if (findfa(x)!=findfa(s) && findfa(x)!=findfa(t) && ds)
+            merge(x,s),ds--;
+    }
+    for (int i=0; i<vt.size(); i++) {
+        int x=vt[i];
+        if (findfa(x)!=findfa(s) && findfa(x)!=findfa(t))
+            merge(x,t),dt--;
+    }
+    for (int i=0; i<vs.size(); i++) {
+        int x=vs[i];
+        if (x==t && !dt) ;
+        else if (findfa(x)!=findfa(s) && ds)
+            merge(x,s),ds--;
+    }
+    for (int i=0; i<vt.size(); i++) {
+        int x=vt[i];
+        if (x==s && !ds) ;
+        else if (findfa(x)!=findfa(t))
+            merge(x,t),dt--;
+    }
+    bool flg=0;
+    for (int i=2; i<=n; i++) if (findfa(i)!=findfa(1)) flg=1;
+    if (dt<0 || ds<0 || flg) return cout<<"No\n",0;
+    cout<<"Yes\n";
+    for (int i=0; i<ans.size(); i++) cout<<ans[i].first<<" "<<ans[i].second<<'\n';
+}
 
 /*
  9 11
@@ -318,12 +405,14 @@ int main(int argc, const char * argv[]) {
  
  
  
- 6 6
+ 7 8
  1 2
  2 4
  2 3
  4 5
  3 5
  5 6
- 1 4 1 1
+ 2 7 
+ 7 5
+ 2 3 2 2
  */
