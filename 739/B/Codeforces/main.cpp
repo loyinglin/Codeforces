@@ -37,7 +37,7 @@
  同时容易知道一个性质：dist(u,v) < dist(f[u],v) f[u]是u的父节点；
  并且如果一个点v，在当前u无法控制的时候，在f[u]也无法控制；
  
- 于是可以按照a[v]的值排序，保证一个单调的有效区间，并在dfs的过程维持上溯时路径的边长距离。
+ 于是可以按照(dist(v, 0) - a[v])的值排序，保证一个单调的有效区间.并在dfs的过程维持上溯时路径的边长距离。
  
  ************************* 题解 ***********************/
 #include<cstdio>
@@ -107,12 +107,12 @@ int main(int argc, const char * argv
 //    q.push(3);
 //    cout << q.top() << endl;
     for (int i = 1; i <= n; ++i) {
-        cin >> a[i];
+        scanf("%d", &a[i]);
         f[i] = i;
     }
     for (int i = 2; i <= n; ++i) {
         int u, v = i, w;
-        cin >> u >> w;
+        scanf("%d%d", &u, &w);
         g[u].push_back(v);
         g[v].push_back(u);
         c[u].push_back(w);
@@ -121,7 +121,7 @@ int main(int argc, const char * argv
     }
     dfs(1, 0, 0);
     for (int i = 1; i <= n; ++i) {
-        cout << ans[i] << " ";
+        printf("%d ", ans[i]);
     }
     
     return 0;
