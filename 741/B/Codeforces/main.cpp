@@ -12,10 +12,13 @@
  同时有m个关系，每个关系由u和v组成，表示u和v是同一组内；
  限制：每一组只能选一个，或者全部选；
  现在有一个容量为w的背包，希望选出最大价值的物品组合放入；
- 
+ (1  ≤  n  ≤  1000, , 1 ≤ w ≤ 1000)
  
  题目解析：
- (1  ≤  n  ≤  1000, , 1 ≤ w ≤ 1000)
+ 如果不考虑限制，就是普通的背包；
+ 加上限制，就是一个分组背包；
+ 
+ 
  
  
  ************************* 题解 ***********************/
@@ -35,55 +38,47 @@
 using namespace std;
 
 typedef long long lld;
-const int N = 101001;
+const int N = 1010;
 
-int a[N], used[N];
+int dp[N], c[N], v[N], f[N];
 
-//最大公约数
-int gcd(int m,int n){
-    int t;
-    if(m<n){t = n;n = m;m = t;}
-    if(n == 0)
-        return m;
-    else
-        return gcd(n,m % n);
+int find(int x) {
+    return x == f[x] ? f[x] : f[x] = find(f[x]);
 }
-
-//最小公倍数
-int lcm(int a,int b){
-    return a/gcd(a,b) * b;
-}
-
-
 
 int main(int argc, const char * argv
          []) {
-    lld n;
-    cin >> n;
+    int n, m, w;
+    cin >> n>> m >> w;
     for (int i = 1; i <= n; ++i) {
-        cin >> a[i];
+        cin >> c[i];
+        f[i] = i;
     }
-    
-    int ans = 1;
+    for (int i = 1; i <= n;  ++i) {
+        cin >> v[i];
+    }
+    while (m--) {
+        int x, y;
+        cin >> x >> y;
+        if (find(x) == find(y)) {
+            if (v[f[x]] * c[f[y]] >= v[f[y]] * c[f[x]]) {
+                f[f[y]] = f[x];
+            }
+            else {
+                f[f[x]] = f[y];
+            }
+        }
+    }
     for (int i = 1; i <= n; ++i) {
-        if (!used[i]) {
-            int t = i, k = 0;
-            while (!used[t]) {
-                used[t] = 1;
-                ++k;
-                t = a[t];
-            }
-            if (t != i) {
-                ans = -1;
-                break;
-            }
-            if (k % 2 == 0) {
-                k /= 2;
-            }
-            ans = lcm(ans, k);
+        for (int j = w; j >= c[i]i; --j) {
+            <#statements#>
         }
     }
     
-    cout << ans << endl;
+    
+    
+    
+    
+    
     return 0;
 }
