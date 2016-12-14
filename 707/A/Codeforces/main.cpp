@@ -6,8 +6,8 @@
 //  Copyright © 2016年 loying. All rights reserved.
 
 /************************** 题解 **********************
-    题目链接：http://codeforces.com/contest/707/problem/A
-    题目大意：输入n * m个字符，字符中存在C M Y为混色，否则为黑白，输出对应的描述。
+ 题目链接：http://codeforces.com/contest/707/problem/A
+ 题目大意：输入n * m个字符，字符中存在C M Y为混色，否则为黑白，输出对应的描述。
  
  Examples
  input
@@ -26,10 +26,10 @@
  #Black&White
  
  
-    题目解析：
+ 题目解析：
  难度在读题，黑白不仅仅是W B，还有G。
  
-************************* 题解 ***********************/
+ ************************* 题解 ***********************/
 #include<cstdio>
 #include<cmath>
 #include<stack>
@@ -60,7 +60,7 @@ lld a[N];
 
 int main(int argc, const char * argv[]) {
     // insert code here...
-   
+    
     int n, m, ret = 1;
     cin >> n >> m;
     for (int i = 0; i < n; ++i) {
@@ -79,7 +79,7 @@ int main(int argc, const char * argv[]) {
         cout << "#Black&White";
     }
     
-
+    
     
     return 0;
 }
