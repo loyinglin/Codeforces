@@ -6,8 +6,8 @@
 //  Copyright © 2016年 loying. All rights reserved.
 
 /************************** 题解 **********************
-    题目链接：http://codeforces.com/contest/707/problem/C
-    题目大意：给出一个数字n，求一组勾股数中的另外两个，使得三个构成勾股数。
+ 题目链接：http://codeforces.com/contest/707/problem/C
+ 题目大意：给出一个数字n，求一组勾股数中的另外两个，使得三个构成勾股数。
  n (1 ≤ n ≤ 10^9)
  >Examples
  input
@@ -22,8 +22,8 @@
  1
  output
  -1
-
-    题目解析：
+ 
+ 题目解析：
  容易知道，n=1,2无解。（最小的勾股数3、4、5）
  假设在a^2+b^2=c^2 中 令a=n
  那么有n*n=c*c-b*b=(c+b)*(c-b)
@@ -32,7 +32,7 @@
  
  令mod=2-n%2，那么有b= (n*n/mod - mod)/2
  
-************************* 题解 ***********************/
+ ************************* 题解 ***********************/
 #include<cstdio>
 #include<cmath>
 #include<stack>
@@ -52,7 +52,7 @@ typedef long long lld;
 
 int main(int argc, const char * argv[]) {
     // insert code here...
-   
+    
     lld k, b;
     cin >> k;
     lld mod = 2 - k % 2;

@@ -6,15 +6,26 @@
 //  Copyright © 2016年 loying. All rights reserved.
 
 /************************** 题解 **********************
-    题目链接：http://codeforces.com/contest/707/problem/D
-    题目大意：n*m的格子，q个操作 (1 ≤ n, m ≤ 10e3, 1 ≤ q ≤ 10e5) 每次有4种操作：
+ 题目链接：http://codeforces.com/contest/707/problem/D
+ 题目大意：n*m的格子，q个操作 (1 ≤ n, m ≤ 10e3, 1 ≤ q ≤ 10e5) 每次有4种操作：
  1 i j, a[i][j] = 1
  2 i j, a[i][j] = 0
  3 i,   for j in a[i], a[i][j] = !a[i][j]
  4 k,   返回操作到第k次的状态，k=0表示起始状态。
  每次操作后输出当前格子为1的数量。
  
-     题目解析：
+ Examples
+ input
+ 2 3 3
+ 1 1 1
+ 3 2
+ 4 0
+ output
+ 1
+ 4
+ 0
+ 
+ 题目解析：
  操作1、2比较简单，操作3是组操作，设置flag[i]表示第i行在最终结算时是否翻转，那么有
  操作1为a[i][j] = !flag[i].
  操作2为a[i][j] = flag[i].
@@ -28,7 +39,7 @@
  那么对操作1、2、3，i会连上一条边到i+1；操作4，i会连上一条边到k。
  对于某一个操作，先执行，然后dfs，最后撤销执行即可。
  
-************************* 题解 ***********************/
+ ************************* 题解 ***********************/
 #include<cstdio>
 #include<cmath>
 #include<stack>
@@ -116,7 +127,7 @@ void lookNext(int k) {
 
 int main(int argc, const char * argv[]) {
     // insert code here...
-   
+    
     int n, q;
     cin >> n >> m >> q;
     for (int i = 1; i <= q; ++i) {
