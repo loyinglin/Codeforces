@@ -28,10 +28,16 @@
  
  题目解析：
  子序列，n又小，状态也少，看起来像动态规划。
- dp[i][j][k] 表示 前i个，状态为j（0101，为1表示对应位数的数字已经选择），当前数字为k的最长子序列。
- 总共有1000 * 2^8 * 8 = 1000 * 2048 = 2e6 的复杂度；
- 转移为O(1)。
- 
+ 问题在于，每个卡片必须选x和x+1张，这个在dp过程中无法控制；
+ 我们只考虑最少的选x张，容易只知道，如果x张可行，那么x-1张可行，具有单调性；
+ 于是，可以用二分来确定x的大小，现在的问题是给出最小长度x，是否能快速求出x的是否有解；
+ 容易知道，每个数字只有x/x+1的状态，可以用0/1来表示，1~8的数字状态压缩后，有255种状态；
+ dp[i][j] 表示 前i个，状态为j（0101，为1表示对应位数的数字已经选择过）中选择x+1的最大数量；
+ 状态转移：
+ dp[p[k][t]+1][j|(1<<k)]=max(dp[p[k][t]+1][j|(1<<k)],dp[i][j]);  跳转到新的长度，选择x个
+ dp[p[k][t]+1][j|(1<<k)]=max(dp[p[k][t]+1][j|(1<<k)],dp[i][j]+1); 选择x+1个
+ p[k][t] 存的是数字k的第t个的下标；
+ 当len=0特殊处理（出现过的颜色的数量）。
  
  ************************* 题解 ***********************/
 #include<cstdio>
@@ -50,29 +56,79 @@
 using namespace std;
 
 typedef long long lld;
-const int N = 1010;
-int a[N], dp[N][1 << 8][9], ans;
+const int N = 1010, inf = 1e9;
+int a[N], dp[N][1<<8], num[8];
+vector<int> p[8];
+
+int look(int len, int n) {
+    memset(num, 0, sizeof(num));
+    for (int i = 0; i <= n; ++i) {
+        for (int j = 0; j < (1 << 8); ++j) {
+            dp[i][j] = -inf;
+        }
+    }
+    dp[0][0] = 0;
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < (1 << 8); ++j) {
+            if (dp[i][j] != -inf) {
+                for (int k = 0; k < 8; ++k) {
+                    if ((j & ( 1 << k)) == 0) {
+                        int t = num[k] + len - 1;
+                        if (t < p[k].size()) {
+                            dp[p[k][t] + 1][j | (1 << k)] = max(dp[p[k][t] + 1][j | (1 << k)], dp[i][j]);
+                        }
+                        ++t;
+                        if (t < p[k].size()) {
+                            dp[p[k][t] + 1][j | ( 1 << k)] = max(dp[p[k][t] + 1][j | (1 << k)], dp[i][j] + 1);
+                        }
+                    }
+                }
+            }
+        }
+        ++num[a[i]];
+    }
+    int ans = -inf;
+    for (int i = 0; i <= n; ++i) {
+        ans = max(ans, dp[i][(1<<8) - 1]);
+    }
+    if (ans == -inf) {
+        return -1;
+    }
+    else {
+        return ans * (len + 1) + (8 - ans) * len;
+    }
+    
+    return 1;
+}
 
 int main()
 {
     int n;
     cin >> n;
-    for (int i = 1; i <= n; ++i) {
+    for (int i = 0; i < n; ++i) {
         cin >> a[i];
+        p[--a[i]].push_back(i);
     }
-    for (int i = 1; i <= n; ++i) {
-        for (int j = 1; j < (1 << 8); ++j) {
-            int mask = 1 << (a[i] - 1);
-            if (j & mask) {
-                dp[i][j][a[i]] = dp[i - 1][j][a[i]] + 1;
-                ans = max(ans, dp[i][j][a[i]]);
-            }
-            else {
-                dp[i][j|mask][a[i]] = dp[i - 1][j][a[i]] + 1;
-                ans = max(ans, dp[i][j|mask][a[i]]);
+    int l = 1, r = n / 8;
+    while (r > l) {
+        int mid = (l + r + 1) / 2;
+        if (look(mid, n) != -1) {
+            l = mid;
+        }
+        else {
+            r = mid - 1;
+        }
+    }
+    int ans = look(l, n);
+    if (ans == -1) {
+        ans = 0;
+        for (int i = 0; i < 8; ++i) {
+            if (p[i].size()) {
+                ++ans;
             }
         }
     }
     cout << ans << endl;
+    
     return 0;
 }
