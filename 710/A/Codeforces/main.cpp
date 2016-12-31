@@ -9,6 +9,14 @@
  题目链接：http://codeforces.com/contest/710/problem/A
  题目大意：一个8*8的棋盘，输入一个点表示国际象棋中的king的位置，求king能行动的格子数量；
  输入两个字符，表示列和行。 列是'a'到'h'，行是1到8。
+ 
+ Example
+ input
+ e4
+ output
+ 8
+ 
+ 
  题目解析：
  题目较简单，看如何实现比较方便。
  列-'a'得到索引x；

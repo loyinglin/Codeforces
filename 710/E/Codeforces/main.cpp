@@ -7,8 +7,21 @@
 
 /************************** 题解 **********************
  题目链接：http://codeforces.com/contest/710/problem/E
- 题目大意：n, x and y (1 ≤ n ≤ 107, 1 ≤ x, y ≤ 109).
+ 题目大意：
  构造n个'a'字符，x为insert/delete 'a'一次的代价，y为复制粘贴一次的代价。
+ n, x and y (1 ≤ n ≤ 107, 1 ≤ x, y ≤ 109).
+ 
+ Examples
+ input
+ 8 1 1
+ output
+ 4
+ 
+ input
+ 8 1 10
+ output
+ 8
+
  
  题目解析：
  动态规划。
