@@ -92,7 +92,6 @@ int main()
             }
             sum[f[u]] += sum[f[v]];
             if (sum[f[u]] > n) {
-                cout << "why " << u << " " << v << " " << i << endl;
             }
             f[f[v]] = f[u];
         }
@@ -100,7 +99,6 @@ int main()
     int ans = -m, maxSum = 0, total = 0;
     for (int i = 1; i <= n; ++i) {
         if (i == find(i)) {
-//                        cout << i << " sum " << sum[i] << " flag " << flag[i] << " edge " << edge[f[i]] << endl;
             if (flag[i]) { // 关键点
                 int x = sum[f[i]];
                 ans += x * (x - 1) / 2; // 完全图减去已有的图
@@ -111,7 +109,6 @@ int main()
             }
         }
     }
-//        cout << "total " << total << " maxSum " << maxSum << endl;
     ans += (total + maxSum) * (total + maxSum - 1) / 2 - maxSum * (maxSum - 1) / 2 ;
     
     if (ans < 0) {
