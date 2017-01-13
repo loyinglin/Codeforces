@@ -37,11 +37,15 @@
  
  复杂度解析：
  时间复杂度
+ O(N*len) len为words中单词的长度。
  空间复杂度
+ O(M*len) hash的空间复杂度较高；
 
  
  其他解法：
- 
+ 有稍微慢一点，但是代码量很小的做法。
+ 仅需20行。
+ https://discuss.leetcode.com/topic/17943/naive-c-solution-using-two-unordered_map-about-20-lines
  
  
  ************************* 题解 ***********************/
@@ -63,38 +67,74 @@
 using namespace std;
 #define LYTEST  1
 
-
-
-typedef long long lld;
-const int N = 50000;
 class Solution {
 public:
     vector<int> findSubstring(string s, vector<string>& words) {
         vector<int> ret;
         unordered_map<string, int> strNum;
-        unordered_map<string, vector<int>> strHash;
         for (string word : words) {
             ++strNum[word];
-            if (strHash.find(word) == strHash.end()) {
-                vector<int> tmp;
-                strHash[word] = tmp;
+        }
+        int n = (int)s.length(), len = (int)words[0].length();
+        for (int i = 0; i < len; ++i) { //枚举可能开始的位置
+            int pos = i, curSize = 0;
+            unordered_map<string, queue<int>> strHash;
+            while (pos + len <= n) {
+                string substr = s.substr(pos, len);
+                if (strNum.find(substr) != strNum.end()) { // 存在子串
+                    strHash[substr].push(pos);
+                    ++curSize;
+                    if (strHash[substr].size() > strNum[substr]) { //超过大小，在最左边元素的左边的值都不要
+                        int leftPos = strHash[substr].front();
+                        strHash[substr].pop();
+                        --curSize;
+                        for (auto iter = strHash.begin(); iter != strHash.end(); ++iter) {
+                            while (!iter->second.empty() && iter->second.front() < leftPos) {
+                                iter->second.pop();
+                                --curSize;
+                            }
+                        }
+                    }
+                    if (curSize == words.size()) { //刚好n个
+                        int ans = n;
+                        for (auto iter = strHash.begin(); iter != strHash.end(); ++iter) {
+                            queue<int> q = iter->second;
+                            ans = min(ans, q.front());
+                        }
+//                        cout << "ans " << ans << endl;
+                        ret.push_back(ans);
+                    }
+                }
+                else {
+                    curSize = 0;
+                    while (!strHash.empty()) {
+                        strHash.erase(strHash.begin());
+                    }
+                }
+                pos += len;
             }
         }
-        int num = (int)words.size(), len = (int)words[0].length();
-        for (int i = 0; i < len - 1; ++i) { //枚举可能开始的位置
-            int pos = i;
-            
-        }
-        
-        
         return ret;
     }
 }leetcode;
 
 
 int main(int argc, const char * argv[]) {
-    vector<int> nums1 = {1, 3};
-    vector<int> nums2 = {2};
+//    string str = "wordgoodgoodgoodbestword";
+//    vector<string> words;
+//    words.push_back(string("word"));
+//    words.push_back(string("good"));
+//    words.push_back(string("best"));
+//    words.push_back(string("good"));
+    
+    string str = "a";
+    vector<string> words;
+    words.push_back(string("a"));
+//    words.push_back(string("foo"));
+//    words.push_back(string("the"));
+    
+    vector<int> ans = leetcode.findSubstring(str, words);
+ 
     
     
     return 0;
