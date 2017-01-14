@@ -7,33 +7,39 @@
 /************************** 题解 **********************
  题目链接：https://leetcode.com/problems/word-ladder-ii/
  题目大意：
- Given:
- beginWord = "hit"
- endWord = "cog"
- wordList = ["hot","dot","dog","lot","log"]
- 
+ 给出beginWord和endWord，以及一个字符字典wordlist。
  从beginWord变成endWord，要求：
  1、每次只能变一个单词；
  2、每次变出来的单词必须在wordList列表；
  所有单词同等长度，都是小写；
  找出所有的最少变化次数。
  
+ 样例
+ beginWord = "hit"
+ endWord = "cog"
+ wordList = ["hot","dot","dog","lot","log"]
+ 
+ Return
+ [
+ ["hit","hot","dot","dog","cog"],
+ ["hit","hot","lot","log","cog"]
+ ]
+ 
  题目解析：
- 非常明显的最短路；
- beginWord、wordlist、endWord两两连边（根据是否可变），求最短路；
- 记录最短路的路径即可。
- 记录几次TLE：
+ beginWord、wordlist、endWord两两连边（根据是否可变），用BFS求出最短路径；
+ 需要记录最短路的路径。
+ 
+ **收获一枚TLE：**
  建图用的是n^2，导致边数较多。
- 当前做法的复杂度：
+ 当前做法的时间复杂度：
  建图是O(N^2),bfs是O(N^2)，dfs不确定，视答案而定。
  
  加了一个简单的优化：
  在compare处，如果不同数量大于1，立即返回；
  
  还可能加的优化：基数排序。这样可以极快的判断x、y是否可以trans；
- 
- 
- 看了下其他人做法，大多数是len*26的可能，然后用set可以O(logN)来判断是否存在key；确实更快
+ 其他做法：
+ 枚举每个字符串下一步修改的可能字符，（len*26种可能），然后用set可以O(logN)来判断是否存在key；确实更快。
  
  
  ************************* 题解 ***********************/
