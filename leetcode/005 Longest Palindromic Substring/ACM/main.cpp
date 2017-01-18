@@ -7,24 +7,30 @@
 /************************** 题解 **********************
  题目链接：https://leetcode.com/problems/longest-palindromic-substring/
  题目大意：
+ 输入一个回文串，输出长度最长的回文子串；
+ 如果有多个答案，输出任意一个。
+ 
+ Input: "babad"
+ Output: "bab"
+ Note: "aba" is also a valid answer.
  
  
  题目解析：
+ 模板题，有现成的解法。
+ 求回文串有O(N)的算法，详见[manacher解析](http://www.cnblogs.com/biyeymyhjob/archive/2012/10/04/2711527.html)。
+
  
  复杂度解析：
  时间复杂度
- O(N+M) N、M是两个数组的长度；
+ O(N) N是字符串的长度；
  空间复杂度
- O(1)；
- 代码量
- 从两个数组返回最小值，并指向下一个可以用函数getNext封装；
+ O(N) N是字符串的长度；
+ 
  
  其他解法：
- 直接合并两个数组，然后排序，取中位数；
- 优劣：代码量更小，但时间较长。
+ 暴力，从每个点开始枚举，判断最长的回文子串，O(N^2);
+ kmp，回文串s和s的转置是一样的，那么可以把原串s和s'进行匹配，判断区间是否合法；（有可能存在匹配，但是区间不重叠的情况）
  
- 
- http://blog.csdn.net/hopeztm/article/details/7932245
  
  ************************* 题解 ***********************/
 #include<cstdio>

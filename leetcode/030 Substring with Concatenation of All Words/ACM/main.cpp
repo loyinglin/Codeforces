@@ -26,13 +26,13 @@
  这样流程就变成：
  初始位置s，截取m个字符str，查询str是否在words中，如果在则判断下m个字符；
  如果不在words中，则回溯到最初的位置s，从s+1开始判断；
- 
+ 但是，
  这样的复杂度会很高，因为回溯之后又要从原来的位置的下一个开始匹配。
  有一种优化方案：假设len为words字符串的统一长度；
  从0,1,2...到len-1，分别匹配一次即可。
  这样可以采取一种策略，当(l, r)的字符串最后len个字符匹配失败后，直接从r+1的位置匹配；因为(r-len,r)的字符不存在words中；
- 如果(r-len, r)在之前已经在k出现过，则可以把左边界移到k+1；
- 
+ 如果(r-len, r)在之前已经在k出现过，则可以把左边界移到k+1，直到遇到右边界；
+ 可以在len次枚举后得到结果。
  
  
  复杂度解析：
@@ -45,7 +45,7 @@
  其他解法：
  有稍微慢一点，但是代码量很小的做法。
  仅需20行。
- https://discuss.leetcode.com/topic/17943/naive-c-solution-using-two-unordered_map-about-20-lines
+ 详见[这里](https://discuss.leetcode.com/topic/17943/naive-c-solution-using-two-unordered_map-about-20-lines)
  
  
  ************************* 题解 ***********************/
