@@ -21,7 +21,7 @@
  
  回到题目的要求，时间复杂度要求是O(N)，可以肯定是会用到方法1；
  现在要求O(1)的空间复杂度，那么就必须利用上给出的数组。
- 遍历数组，如果数字k小于n，那么a[k-1]=k-1;
+ 遍历数组，如果数字k小于n且非负，那么a[k-1]=k-1;
  然后遍历一遍，a[i] != i的就行是解。
  
  复杂度解析：
@@ -30,9 +30,16 @@
  
  
  其他解法：
+ 基数排序。
  
+ 重低位开始，
+ 当前第i位，统计0出现x次，1出现y次，(x+y == n)
+ 再次扫描数组，可以直接确定每个数字该排在哪里。
+ if bit = 0 then
+ idx = total_y + (total_x-left_x)
+ ..
  
- 
+ http://blog.csdn.net/zzwab99/article/details/8181927
  ************************* 题解 ***********************/
 #include<cstdio>
 #include<cmath>
@@ -55,24 +62,27 @@ using namespace std;
 class Solution {
 public:
     int firstMissingPositive(vector<int>& nums) {
-        int ret = 1;
-        for (int i = 0; i < nums.size(); ++i) {
-            if (i <= nums.size() && i > 0) {
-
+        int ret = (int)nums.size() + 1, n = (int)nums.size();
+        for(int i = 0; i < n; ++ i) {
+            while(nums[i] > 0 && nums[i] <= n && nums[nums[i] - 1] != nums[i]) {
+                swap(nums[i], nums[nums[i] - 1]);
             }
-            else {
-                nums[i] = -1;
+        }
+        for(int i = 0; i < n; ++ i) {
+            if(nums[i] != i + 1) {
+                ret = i + 1;
+                break;
             }
         }
         return ret;
     }
-};
+}lc;
 
 
 int main(int argc, const char * argv[]) {
-    vector<int> nums1 = {1, 3};
+    vector<int> nums1 = {100, -1};
     vector<int> nums2 = {2};
-    
+    cout << lc.firstMissingPositive(nums1) << endl;
     
     return 0;
 }
