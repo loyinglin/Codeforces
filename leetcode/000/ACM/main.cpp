@@ -41,6 +41,22 @@ using namespace std;
 #define LYTEST  1
 
 
+struct Node {
+    int first, second;
+    Node(){}
+    Node(int f, int s) {
+        first = f;
+        second = s;
+    }
+    bool operator < (const Node tmp) const {
+        if (first != tmp.first) {
+            return first > tmp.first;
+        }
+        else {
+            return second > tmp.second;
+        }
+    }
+};
 
 typedef long long lld;
 const int N = 50000;
