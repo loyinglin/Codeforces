@@ -5,7 +5,7 @@
 //  Created by 林伟池 on 16/9/4.
 //  Copyright © 2016年 林伟池. All rights reserved.
 /************************** 题解 **********************
- 题目链接：https://leetcode.com/problems/substring-with-concatenation-of-all-words/
+ 题目链接：
  题目大意：
  
  
