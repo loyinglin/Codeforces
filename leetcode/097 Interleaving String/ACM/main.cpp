@@ -5,15 +5,32 @@
 //  Created by 林伟池 on 16/9/4.
 //  Copyright © 2016年 林伟池. All rights reserved.
 /************************** 题解 **********************
- 题目链接：https://leetcode.com/problems/substring-with-concatenation-of-all-words/
+ 题目链接：https://leetcode.com/problems/interleaving-string
  题目大意：
+ 给出三个字符串s1,s2,s3；
+ 判断字符串s3能否由字符串s1和s2组成，要求s1的字符串内字符的相对顺序不变，s2同理。（假如s1=abc，那么在s3中，就不能变成bac，相对顺序必须是abc）
+ 
+ For example,
+ Given:
+ s1 = "aabcc",
+ s2 = "dbbca",
+ 
+ When s3 = "aadbbcbcac", return true.
+ When s3 = "aadbbbaccc", return false.
  
  
  题目解析：
+ 动态规划。
+ dp[i][j] 表示s1的前i个字符，s2的前j个字符，组成的字符串是否为s3的前i+j个字符。
+ dp[0][0]=true，表示初始状态。
+ 假设dp[i][j]=true，那么表示s1的前i个字符，s2的前j个字符，与s3的前i+j个字符是匹配的。
+ 那么只要s1[i+1]==s3[i+j+1]，那么dp[i+1][j]=true;
+ 同理，有dp[i][j]=true && s2[j+1] == s3[i+j+1] => dp[i][j+1]=true
+
+ 最后看dp[n][m]是否为true即可。
  
  复杂度解析：
- 时间复杂度是O(N)
- 空间复杂度是O(N)
+ 时间和空间复杂度是O(NM) N是s1长度，M是s2长度；
  
  
  
