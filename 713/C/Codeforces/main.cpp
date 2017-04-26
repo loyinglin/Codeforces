@@ -6,7 +6,7 @@
 //  Copyright © 2016年 loying. All rights reserved.
 
 /************************** 题解 **********************
- 题目链接：http://codeforces.com/contest/713/problem/B
+ 题目链接：http://codeforces.com/contest/713/problem/C
  题目大意：n个数字，每次可以把一个数字+1或者-1，代价为1；
  问把n个数字改为严格递增序列的最小代价。
   n (1 ≤ n ≤ 3000)
@@ -30,6 +30,7 @@
  令b[i]=第i大的数字， dp[i][j] 表示第前i个数字转移到第j大的数字的代价；
  那么有dp[i][j] = min(dp[i][j], dp[i - 1][k] + abs(a[i] - b[i]));  1<= k <= j；
  在求dp[i][j] 的过程中，维护一个dp[i-1][1~j]的最小值即可。
+ 
  
  ************************* 题解 ***********************/
 #include<cstdio>
