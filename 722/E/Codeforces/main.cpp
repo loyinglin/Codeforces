@@ -6,7 +6,7 @@
 //  Copyright © 2016年 loying. All rights reserved.
 
 /************************** 题解 **********************
- 题目链接：http://codeforces.com/contest/722/problem/C
+ 题目链接：http://codeforces.com/contest/722/problem/E
  题目大意：
  一个网格，总共有n*m的cell，cell可以上下左右走，一个人带着一个电量为x的电池，从(1,1)出发到(n,m)，随机选择一条最短路径；
  有k个特殊的cell，经过这个cell时，电池的电量会减半；（向上取整）
@@ -20,26 +20,24 @@
  output
  333333342
  
- 1 1 1
- 1 2
- 
- 
+  
  
  题目解析：
- 最多有logS个选择，把障碍点排序；（如果起点和终点也要加入）
+ 
+ 根据题目的限制--电池的电量会减半，我们知道：
+ 最多有logS个选择。
+ 那么，把障碍点排序（起点和终点也要加入）
  f[i][j] 表示前j个，经过i个障碍的可能数；
  g[i][j] 表示前j个，至少经过i个障碍物的可能数；
- 
+ 那么有
  g[i][j]=∑f[i−1][k]∗Ways[k][j]
  f[i][j]=g[i][j]−∑f[i][k]∗Ways[k][j]
- 
  Ways[i][j]表示i到j的方案数
  
+ 
+ 这里需要用到组合数公式：
  C(n,m) = A(n,m)/A(n,n)=m! / ((m-n)! * n!) = m! * (m-n)!^(-1) * n!^(-1);
- 
- 
- 
- http://blog.csdn.net/acdreamers/article/details/8220787 逆元详解
+ 还需要用到乘法逆元的知识：[逆元详解](http://blog.csdn.net/acdreamers/article/details/8220787)
  
  ************************* 题解 ***********************/
 #include<cstdio>
