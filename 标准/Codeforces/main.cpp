@@ -2,8 +2,8 @@
 //  main.cpp
 //  Codeforces
 //
-//  Created by loying on 16/7/27.
-//  Copyright © 2016年 loying. All rights reserved.
+//  Created by loyinglin.
+//  Copyright loyinglin. All rights reserved.
 
 /************************** 题解 **********************
  题目链接：http://codeforces.com/contest/697/problem/A
@@ -31,16 +31,17 @@ const int N = 101000, M = 3010100, inf = 0x7fffffff;
 const lld llinf = 0x7fffffff7fffffffll;
 
 struct Node {
-    int value, pos;
+    int first, second;
     
     bool operator<(const Node &tmp) const
     {
-        return value < tmp.value;
+        if (first != tmp.first) return first < tmp.first;
+        else return second < tmp.second;
     };
-    Node(int x, int y):value(x), pos(y){};
+    Node(int first, int second):first(first), second(second){};
     Node(){};
 }node[N];
-lld a[N];
+int a[N];
 
 int main(int argc, const char * argv[]) {
     // insert code here...
