@@ -34,6 +34,17 @@
  
  
  题目解析：
+ 从题意知道，小明如果0点就到达，一定可以得到服务，故答案必然有解；
+ 用贪心的思想，所有的情况可以分为两种：
+ 1、小明可以在某个人到达的时间的前一秒钟到达；
+ 2、小明在所有人办理业务完成后再到达；
+ 
+ 于是枚举a[i]-1到达的时间的最小等待时间，并且再统一考虑最后一种情况即可。
+ 时间复杂度O(N)；
+ 
+ 
+ 
+ 
  
  ************************* 题解 ***********************/
 #include<cstdio>
@@ -57,7 +68,7 @@ const lld llinf = 0x7fffffff7fffffffll;
 
 struct Node {
     int first, second;
-    
+
     bool operator<(const Node &tmp) const
     {
         if (first != tmp.first) return first < tmp.first;
@@ -66,25 +77,32 @@ struct Node {
     Node(int first, int second):first(first), second(second){};
     Node(){};
 }node[N];
-int a[N];
+lld a[N];
 
 int main(int argc, const char * argv[]) {
     // insert code here...
-    
+    lld ts, td, t;
+    cin >> ts >> td >> t;
     int n;
     cin >> n;
-    
-    string ret = "I hate ";
-    for (int i = 0; i < n - 1; ++i) {
-        if (i % 2 == 0) {
-            ret += "that I love ";
-        }
-        else {
-            ret += "that I hate ";
+    for (int i = 1; i <= n; ++i) {
+        cin >> a[i];
+    }
+    lld m = llinf, cur = ts, ans = 0;
+    for (int i = 1; i <= n; ++i) {
+        if (a[i] + t <= td) { // 如果 > td 表示这个人得不到服务，不用考虑
+            if (max(cur, a[i] - 1) + t <= td && cur - a[i] + 1 < m)  {
+                m = cur - a[i] + 1; // m 表示最小的等待时间，
+                ans = min(a[i] - 1, cur); // 只要在第i个人来的前一秒到达
+            }
+            cur = max(cur, a[i]) + t; // 之前可能排队了若干个人，导致a[i]也要等待到cur才能办理业务
         }
     }
-    ret += "it";
-    cout << ret << endl;
+    if (cur + t <= td) {
+        ans = cur;
+    }
+    cout << ans << endl;
+    
     
     return 0;
 }
