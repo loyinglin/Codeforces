@@ -8,21 +8,20 @@
 /************************** 题解 **********************
  题目链接：http://codeforces.com/contest/724/problem/E
  题目大意：
- n个城市，单向边；每个城市都会产出p[i]单位的货物；每个城市最多卖出s[i]单位的货物；
+ n个城市，城市之间存在单向边；
+ 每个城市都会产出p[i]单位的货物；每个城市最多卖出s[i]单位的货物；
  对于所有编号为 i、j的城市（1 <= i < j <= n） 都存在一条边i=>j，能运送一次，最多为c单位；
- 
  输入n、c以及p[i] 和 s[i]，输出能卖出去的最大单位数；
+ n and c (1 ≤ n ≤ 10 000, 0 ≤ c ≤ 1e9)
  
+ Examples
  input
  3 0
  1 2 3
  3 2 1
  output
  4
- 
- 解释：不能运输，那么只能卖出1 + 2 + 1 = 4 单位；
- 
- N=1W
+ 样例解释：c=0，那么城市之间不能运输，那么只能卖出1 + 2 + 1 = 4 单位；
  
  
  题目解析：
@@ -46,7 +45,7 @@
  dp[i-1][j-1] + s[i] 表示第i个城市直接连src的边，加入最小割；
  dp[i-1][j]+ j*c + p[i] 表示i城市连src的边不加入最小割，那么为了断开点i与dest的关系，需要断开前i个点中，所有与src相连的点到i的边（c*j），还有p[i]的边；
  
- 
+ 代码是很短的。
  ************************* 题解 ***********************/
 #include<cstdio>
 #include<cmath>
@@ -69,7 +68,6 @@ const int N = 222222, M = 22;
 int p[N], s[N];
 lld f[N];
 
-
 int main(int argc, const char * argv[]) {
     int n, c;
     cin >> n >> c;
@@ -91,8 +89,5 @@ int main(int argc, const char * argv[]) {
         ans = min(ans, f[i]);
     }
     cout << ans << endl;
-    
-    
-    
     return 0;
 }
