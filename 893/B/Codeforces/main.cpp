@@ -6,19 +6,20 @@
 //  Copyright loyinglin. All rights reserved.
 
 /************************** 题解 **********************
- 1.Numbers Exchange
- [题目链接](http://codeforces.com/contest/746/problem/A)
- **题目大意：**
+ 题目链接：http://codeforces.com/contest/893/problem/B
+ 题目大意：
+ 如果数字x的二进制表示，是由k+1个连续的1 与 k个连续的0组成，那么数字x是beautiful Number；
+ 1(2) = 1(10);
+ 110(2) = 6(10);
  
- **输入数据：**
+ 给出数字n，求数字n最大的约数，并且这个约数是beautiful Number.
+  (1 ≤ n ≤ 105)
  
- >**Examples**
- **input**
- **output**
  
- **题目解析：**
+ 题目解析：
+ 可以直接遍历<=n的所有数字，先判断约数，再判断是否为beautiful Number；
+ 为了代码更简单，先枚举出来所有的beautiful Number，再从中选择一个最大且是n的约数的beautiful Number。
  
- **思考🤔：**
  
  ************************* 题解 ***********************/
 #include<cstdio>
@@ -55,21 +56,32 @@ int a[N];
 
 int main(int argc, const char * argv[]) {
     // insert code here...
+    int k = 1;
+    a[0] = 1;
+    do {
+        int sum = (pow(2, k + 1) - 1) * pow(2, k);
+        if (sum > N) {
+            break;
+        }
+        else {
+            a[k++] = sum;
+        }
+    } while (true);
+    
+//    for (int i = 0; i < k; ++i) {
+//        cout << i << " " << a[i] << endl;
+//    }
+    
     
     int n;
     cin >> n;
-    
-    string ret = "I hate ";
-    for (int i = 0; i < n - 1; ++i) {
-        if (i % 2 == 0) {
-            ret += "that I love ";
-        }
-        else {
-            ret += "that I hate ";
+    for (int i = k - 1; i >= 0; --i) {
+        if (n % a[i] == 0) {
+            cout << a[i] << endl;
+            break;
         }
     }
-    ret += "it";
-    cout << ret << endl;
+
     
     return 0;
 }
