@@ -7,31 +7,33 @@
 
 /************************** 题解 **********************
  题目链接：http://codeforces.com/contest/749/problem/C
- 题目大意：n个人分配两派，分别用D、R表示；
+ 题目大意：
+ n个人分配两派，分别用D、R表示；
  现在他们进行选举，每个人轮流投票，每次可以否决一个人，这个人就退出选举；
  每次都是从左到右进行投票，直到剩下最后一个人，这个人代表的阵营胜利。
  假设他们的投票都是理性的，问最后哪方阵营能获胜？
  
- Examples
- input
+ **输入数据：**
+ n (1 ≤ n ≤ 200 000)
+ 
+ >**Examples**
+ **input**
  5
  DDRRR
- output
+ **output**
  D
- input
- 6
- DDRRRR
- output
- R
  样例解释：
- Employee 1 denies employee 5 to vote.
- Employee 2 denies employee 3 to vote.
- Employee 3 has no right to vote and skips his turn (he was denied by employee 2).
- Employee 4 denies employee 2 to vote.
- Employee 5 has no right to vote and skips his turn (he was denied by employee 1).
- Employee 1 denies employee 4.
- Only employee 1 now has the right to vote so the voting ends with the victory of depublicans.
- 
+ 第一轮投票：
+ 1号 否决 5号；
+ 2号 否决 3号；
+ 3号 退出；
+ 4号 否决 2号；
+ 5号 退出；
+ 第二轮投票：
+ 1号 否决 4号；
+ 2号 退出；
+ 4号 退出；
+ 只剩下1号，所以1号的阵营D胜利。
  
  题目解析：
  每个人会淘汰一个人出局，那这个人必然是对方阵营，如果不得已要淘汰己方的阵营，那就代表着胜利；

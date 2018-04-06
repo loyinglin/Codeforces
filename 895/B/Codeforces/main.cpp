@@ -6,7 +6,7 @@
 //  Copyright loyinglin. All rights reserved.
 
 /************************** 题解 **********************
- Numbers Exchange
+ XK Segments
  [题目链接](http://codeforces.com/contest/895/problem/B)
  **题目大意：**
  给出一个数组a，一个整数x。
