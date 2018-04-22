@@ -30,37 +30,27 @@
  -1
  
  题目解析：
- 二分答案ans，每个数字尽可能分，保证每个大于ans，最后判断是否足够分。
- 枚举的过程，首先尝试的方法是对每个数字进行拆分，在保证>=ans，直到不能拆，这的复杂度logM * n * n;
- 最初是以 `find(x){ find(x/2)+find(x-x/2)}`这样的方式，进行判断，在ans较小的时候，其实是O(N)的复杂度；
- 因为没有考虑到这一点，导致TLE了三次；
- 解决方案是：
- 考虑到每个数字的范围只有1e7；
- 从最大开始枚举，如果大于ans*2，那么进行拆分；
- 直到数字=ans，这时可以得到>=ans的数字数量。
- ```
- lld findExt(lld n, lld mid) {
- lld ret = 0;
- memset(num, 0, sizeof(num));
- for (lld i = 0; i < n; ++i) {
- num[a[i]]++;
- }
- for (lld i = 1e7; i >= mid; --i) {
- if (i / 2 >= mid) {
- num[i / 2] += num[i];
- num[i - i / 2] += num[i];
- }
- else {
- ret += num[i];
- }
- }
- return ret;
- }
- ```
+ 分出k个数，保证最小值尽可能大；
+ 第一想法是二分答案，假设最后的结果是ans，对于数字x，while(x/2>=ans)，对数字x进行平分；
+ 假设num[x]表示数字x的数量，如果x/2>=ans，那么有num[x/2] += num[x], num[x - x/2] += num[x];
+ 最后再统计所有数字比ans大的数字数量，判断是否大于k；
+ 复杂度为二分复杂度log(1e7) * 枚举平分复杂度(1e7) =24*1e7=2.4e8的复杂度；
+ 因为题目给的时限为2s，勉强可以完成；
+ 
+ 思考：
+ 另一种更优雅的方案。
+ 以数字21为例，如果ans∈[11, 21]这一区间，>ans的数字只有一个；
+ 如果ans=10时，就能算两个数字；（因为21可以拆分为10+11）
+ 数字x，可以切分为数字较小的部分x/2和数字较大的部分(x-x/2)，我们用a[x]来表示数字x的个数，b[x]表示当x拆分时(x-x/2)的数量；
+ 当ans>(x-x/2)时，x的拆分没有额外收益；
+ 当ans<=x/2时，x的拆分相当于多出来一个数字a[x/2]；
+ 于是有：
+ a[x/2] += a[x]+b[x];
+ b[x-x/2] += a[x]+b[x];
  
  
  ************************* 题解 ***********************/
- /*
+
 #include<cstdio>
 #include<cmath>
 #include<stack>
@@ -82,7 +72,7 @@ const lld llinf = 0x7fffffff7fffffffll;
 
 lld a[N], b[N];
 
-lld main(lld argc, const char * argv[]) {
+int main(int argc, const char * argv[]) {
     // insert code here...
     
     lld n, k, total = 0;
@@ -90,7 +80,7 @@ lld main(lld argc, const char * argv[]) {
     cin >> n >> k;
     for (lld i = 0; i < n; ++i) {
         lld t;
-        scanf("%d", &t);
+        cin >> t;
         ++a[t];
         maxAns = max(maxAns, t);
     }
@@ -101,18 +91,18 @@ lld main(lld argc, const char * argv[]) {
             return 0;
         }
         else {
-            a[i / 2] += a[i] + b[i]; // 数字i本身能分离出来一个i，
+            a[i / 2] += a[i] + b[i]; // 数字i本身能分离出来一个i
             b[i - i / 2] += a[i] + b[i];  //
         }
-        cout << i << " a: " << a[i] <<  " b: " << b[i] << " sum: " << total << endl;
+//        cout << i << " a: " << a[i] <<  " b: " << b[i] << " sum: " << total << endl;
     }
     cout << -1 << endl;
     
     return 0;
 }
-*/
 
 
+/*
 #include<cstdio>
 #include<cmath>
 #include<stack>
@@ -207,3 +197,4 @@ int main(int argc, const char * argv[]) {
     return 0;
 }
 
+*/

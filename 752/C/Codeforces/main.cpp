@@ -9,10 +9,11 @@
  题目链接：http://codeforces.com/contest/752/problem/C
  题目大意：
  有一个机器人，在一个网格的网格线上行走，每次有L/R/U/D四个方向；
- 给出一个点的序列，p1,p2,p3，机器人会按照最短的路径走向p1点，到达后再走向p2点，再到p3点；
- 现在假设机器人在原点，已知机器人走的路径，求最短的点序列的长度。
+ 当机器人从点p1走到点p2时，它会走最短的路径。
+ 如果有3个点p1、p2、p3，机器人会按照最短的路径走向p1点，到达后再走向p2点，再到p3点；
+ 现在假设机器人在原点，已知机器人走的序列（长度为n），求最少有几个点，可以满足机器人走的序列。
  
- 
+ n (1 ≤ n ≤ 2·105)
  Example
  input
  6
@@ -24,26 +25,6 @@
  RRRULURURUULULLLDLDDRDRDLD
  output
  7
- 
- 
- 题目样例：
- Examples
- input
- helloworld
- ehoolwlroz
- output
- 3
- h e
- l o
- d z
- 
- input
- merrychristmas
- christmasmerry
- output
- -1
- 
- 
  
  题目解析：
  看似很难，仔细分析一下，只要找到两点之间路径的规律即可。
