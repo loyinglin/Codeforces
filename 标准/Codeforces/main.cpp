@@ -6,13 +6,13 @@
 //  Copyright loyinglin. All rights reserved.
 
 /************************** 题解 **********************
- 1.Numbers Exchange
  [题目链接](http://codeforces.com/contest/746/problem/A)
  **题目大意：**
  
- **输入数据：**
+ 输入：
+ 输出：
  
- >**Examples**
+ **Examples**
  **input**
  **output**
  
