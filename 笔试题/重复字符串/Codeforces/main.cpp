@@ -8,35 +8,22 @@
 /************************** 题解 **********************
  [题目链接](http://codeforces.com/contest/746/problem/A)
  **题目大意：**
- 1、整数求出1的数字
- 2、二叉树的深度
- 3、Https
- 4、DNS劫持
- 5、property；
- 6、category属性；
- 7、iOS装载；
  
- 1、职责；
- 2、什么部门过来；
- 3、薪酬；
- 4、工时；
+ 给出一个字符串str，包含数字、中括号和字母；
+ 3[a]=aaa，2[bc]=bcbc；
+ 现在希望给出一个原串str，求中括号展开后的字符串；（数字为非零整数，且给出的字符串不存在3[], a[b]这样的非法串）
+ 
+ s = "3[a]2[bc]", return "aaabcbc".
+ s = "3[a2[c]]", return "accaccacc".
+ s = "2[abc]3[cd]ef", return "abcabccdcdcdef".
 
- snapchat  +  glass
- 
- CoreCemara Team
- 10 -
- 英文
- Snap 
- 
- 
- 输入：
- 输出：
- 
- **Examples**
- **input**
- **output**
  
  **题目解析：**
+ 两种方法：递归、栈实现；
+ 这里选择代码较为清晰的递归。
+ 首先，找到数字x；
+ 接着，找出数字x后面的中括号内容subStr，重复x次;
+ 返回字符串；
  
  **思考🤔：**
  

@@ -10,16 +10,18 @@
  https://leetcode.com/problems/word-break
  在前文的基础上，输出所有的解。
  
+ Input:
+ s = "catsanddog"
+ wordDict = ["cat", "cats", "and", "sand", "dog"]
+ Output:
+ [
+ "cats and dog",
+ "cat sand dog"
+ ]
  
  题目解析：
  用vector来存可能的解，然后用dfs来输出即可。
  
- 复杂度解析：
- 时间复杂度
- 
- 空间复杂度
- 
- 代码量
  
  
  其他解法：
