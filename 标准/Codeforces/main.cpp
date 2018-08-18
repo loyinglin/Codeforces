@@ -16,18 +16,25 @@
  6、category属性；
  7、iOS装载；
  
+ 流程。
+ 
  1、职责；
  2、什么部门过来；
  3、薪酬；
  4、工时；
 
  snapchat  +  glass
- 
+ 括号匹配
  CoreCemara Team
  10 -
  英文
  Snap 
  
+ 
+ // snap app；合作关系；相机；feature划分；
+ // 福田；嘉里建设广场
+ //
+ 拓扑排序
  
  输入：
  输出：
@@ -57,72 +64,70 @@
 using namespace std;
 
 typedef long long lld;
-const int N = 101000, M = 3010100, inf = 0x7fffffff;
+const int N = 1000, M = 3010100, inf = 0x7fffffff;
 const lld llinf = 0x7fffffff7fffffffll;
 
-struct Node {
-    int first, second;
-    
-    bool operator<(const Node &tmp) const
-    {
-        if (first != tmp.first) return first < tmp.first;
-        else return second < tmp.second;
-    };
-    Node(int first, int second):first(first), second(second){};
-    Node(){};
-}node[N];
+// android，硬件
+// Camera，性能
+// 用户新增、留存
+// 图片质量、自动化、标准
 
+// 底层架构，performance；video；image 拍照
+// 曝光、人脸、抠像、
 
-string transfrom(string str) {
-    string ret;
-    int n = (int)str.length();
-    int index = 0;
-    while (index < n) {
-        if (str[index] >= '1' && str[index] <= '9') { // number
-            int sum = str[index] - '0';
-            ++index;
-            while (str[index] >= '0' && str[index] <= '9') {
-                sum = sum * 10 + str[index] - '0';
-                ++index;
-            }
-            // str[index] = '['
-            int match = 1;
-            ++index;
-            int left = index, right = 0;
-            
-            while (match) {
-                if (str[index] == '[') {
-                    ++match;
-                }
-                else if (str[index] == ']') {
-                    --match;
-                }
-                ++index;
-            }
-            // str[index] = ']'
-            right = index - 1;
-            string subStr = transfrom(string(str.begin() + left, str.begin() + right));
-            for (int i = 0; i < sum; ++i) {
-                ret.append(subStr);
-            }
-        }
-        else {
-            ret.append(string(str.begin() + index, str.begin() + index + 1));
-            ++index;
-        }
-    }
-    return ret;
-    
-}
+// 出差；项目需求驱动；设计、研究人员对接；
+// 深圳偏工程；
 
+// 
 
+int s[N], d[N];
+int a[N];
 
 int main(int argc, const char * argv[]) {
     // insert code here...
     
-    string str;
-    cin >> str;
-    cout << transfrom(str) << endl;
+    
+    /*
+     2
+     3
+     8:00 9:00
+     11:00 12:00
+     14:00 15:00
+     
+     2
+     10:00 11:00
+     17:00 18:00
+     */
+    int n;
+    cin >> n;
+    for (int i = 0; i < n; ++i) {
+        int m;
+        cin >> m;
+        for (int j = 0; j < m; ++j) {
+            int x, y;
+            scanf("%d:%d", &x, &y);
+            x -= 8;
+            s[x * 60 + y]++;
+            scanf("%d:%d", &x, &y);
+            x -= 8;
+            d[x * 60 + y]--;
+        }
+    }
+    
+    a[0] = s[0];
+    for (int i = 1; i <= 60 * 10; ++i) {
+        a[i] = a[i - 1] + s[i] + d[i];
+    }
+    a[60 * 10 + 1] = 1;
+    int cur = 0;
+    for (int i = 1; i <= 60 * 10 + 1; ++i) {
+        if (a[i] == 0 && a[i - 1] != 0) {
+            cur = i;
+        }
+        if (a[i] != 0 && a[i - 1] == 0 && cur != i - 1) {
+            printf("%d:%02d - %d:%02d\n", cur / 60 + 8, cur % 60, (i - 1) / 60 + 8, (i - 1) % 60);
+        }
+    }
     
     return 0;
 }
