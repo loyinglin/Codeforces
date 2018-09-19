@@ -36,6 +36,13 @@
  //
  拓扑排序
  
+ // 数字连续区间，上升区间；
+ // rand算法
+ 
+ // 外企更重视的是面对问题，如何抽丝剥茧，逻辑化的去思考；
+ // 国内企业问，知不知道一个问题；国外企业问，面对不知道的问题你是如何思考、解决；
+ 
+ 
  输入：
  输出：
  
@@ -78,56 +85,69 @@ const lld llinf = 0x7fffffff7fffffffll;
 // 出差；项目需求驱动；设计、研究人员对接；
 // 深圳偏工程；
 
-// 
+/*
+ 硅谷公司
+ 有机会来自全球各地的工程师交流
+ 英文的交流
+ 
+ 快，人力成本，试错成本低；
+ 人，珍惜时间，技术要求改；
+ snap压力大；
+ 
+ 
+ 
+ 
+ */
 
 int s[N], d[N];
 int a[N];
+pair<int, int> ans[N];
+int vis[N];
+int len[N];
+int n, k;
+
+void look(vector<int> ans, int sum, int index) {
+    // 1.take
+    ans.push_back(a[index]);
+    if (sum + a[index] == k) {
+        for (int i = 0; i < ans.size(); ++i) {
+            cout << ans[i] << " ";
+        }
+        
+        cout << " " << endl;
+    }
+    if (index + 1 < n) {
+        look(ans, sum + a[index], index + 1);
+    }
+    
+    // 2.not take
+    ans.pop_back();
+    if (index + 1 < n) {
+        look(ans, sum, index + 1);
+    }
+    
+}
+
+//
+
 
 int main(int argc, const char * argv[]) {
     // insert code here...
     
-    
     /*
-     2
-     3
-     8:00 9:00
-     11:00 12:00
-     14:00 15:00
+     8 10
+     2 4 3 5 7 6 8 9
      
-     2
-     10:00 11:00
-     17:00 18:00
+     
+     6 6
+     2 3 1 4 6 2
      */
-    int n;
-    cin >> n;
+    cin >> n >> k;
     for (int i = 0; i < n; ++i) {
-        int m;
-        cin >> m;
-        for (int j = 0; j < m; ++j) {
-            int x, y;
-            scanf("%d:%d", &x, &y);
-            x -= 8;
-            s[x * 60 + y]++;
-            scanf("%d:%d", &x, &y);
-            x -= 8;
-            d[x * 60 + y]--;
-        }
+        cin >> a[i];
     }
-    
-    a[0] = s[0];
-    for (int i = 1; i <= 60 * 10; ++i) {
-        a[i] = a[i - 1] + s[i] + d[i];
-    }
-    a[60 * 10 + 1] = 1;
-    int cur = 0;
-    for (int i = 1; i <= 60 * 10 + 1; ++i) {
-        if (a[i] == 0 && a[i - 1] != 0) {
-            cur = i;
-        }
-        if (a[i] != 0 && a[i - 1] == 0 && cur != i - 1) {
-            printf("%d:%02d - %d:%02d\n", cur / 60 + 8, cur % 60, (i - 1) / 60 + 8, (i - 1) % 60);
-        }
-    }
+    vector<int> ans;
+    look(ans, 0, 0);
     
     return 0;
 }
