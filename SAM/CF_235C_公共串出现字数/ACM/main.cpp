@@ -2,8 +2,8 @@
 //  main.cpp
 //  ACM
 //
-//  Created by 林伟池 on 16/9/4.
-//  Copyright © 2016年 林伟池. All rights reserved.
+//  Created by loyinglin on 16/9/4.
+//  Copyright © 2016年 loyinglin. All rights reserved.
 /************************** 题解 **********************
  题目链接：
  题目大意：

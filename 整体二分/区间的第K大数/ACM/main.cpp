@@ -2,8 +2,8 @@
 //  main.cpp
 //  ACM
 //
-//  Created by 林伟池 on 16/9/4.
-//  Copyright © 2016年 林伟池. All rights reserved.
+//  Created by loyinglin on 16/9/4.
+//  Copyright © 2016年 loyinglin. All rights reserved.
 /************************** 题解 **********************
  题目链接：http://poj.org/problem?id=2104
  题目大意：给出一个长度为n的数列，m次询问区间内的第k大数

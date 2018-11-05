@@ -2,12 +2,12 @@
 //  main.cpp
 //  ACM
 //
-//  Created by 林伟池 on 16/9/4.
-//  Copyright © 2016年 林伟池. All rights reserved.
+//  Created by loyinglin on 16/9/4.
+//  Copyright © 2016年 loyinglin. All rights reserved.
 /************************** 题解 **********************
  题目链接：https://leetcode.com/problems/lfu-cache/
  题目大意：
- 实现最近最不经常使用算法。如果有相同的使用频率，保留最近使用的（put操作不算使用）。
+ 实现LRU(最近最少使用)算法。如果有相同的使用频率，保留最近使用的（put操作不算使用）。
  要求，get、put操作O（1）实现；
  
  ```
@@ -30,17 +30,17 @@
  2、key不存在， 如果cache没满，直接放入cache；
  如果当前cache已满，去掉最不经常使用的key，再把key放入cache；
  
- 
  get操作考虑key是否存在：
  1、key存在，返回key对应的值，并+1最近使用频率；
- key不存在，返回-1；
+ 2、key不存在，返回-1；
  
  如果使用朴素实现，list来存(key, value)对，并且在需要更新时直接去掉list节点，重新查找插入位置；
  每次的操作复杂度都是O(N)，并不符合要求。
  
  优化思路：
  耗时在于查找key值和插入key值；
- 因为每次
+ 
+ 
  
  
  复杂度解析：
