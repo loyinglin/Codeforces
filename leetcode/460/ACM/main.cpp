@@ -40,6 +40,21 @@
  优化思路：
  耗时在于查找key值和插入key值；
  
+ unordered_map<int, pair<int, int> > keyMap; // key = <value, freq>
+ unordered_map<int, list<int>::iterator> iterMap; // 对应key的list迭代器，用于快速获得值
+ unordered_map<int, list<int> > freqMap; // 使用频率是map
+ 
+ 引入三个map，分别是keyMap、iterMap和freqMap；
+ keyMap记录对应key的value和出现频率，这样可以O(1)得到对应key值的pair(值value，出现频率freq)；
+ freqMap的索引是出现频率freq，value是链表，存储当前使用频率为freq的数字；（比如说put(1, 2)，put(3, 4)，两次put操作之后，key值1、3都出现了（初始出现频率=1），所以有freq=1的链表(3，4)，即使freqMap[1]=(3,4)；
+ iterMap的索引是输入的key，这样可以O(1)得到对应key值的链表迭代器，方便的更新key值的出现频率；（比如说在put(1, 2)，put(3, 4)之后，又出现一次get(1)，此时key=1出现频率为2，所以应该挪到freqMap[2]=(1)这样，此时需要把freqMap[1]中链表的4移除，此时如果遍历会很慢，所以引入iterMap以快速访问）
+ 
+ 这样就解决了key值的查找、插入带来的更新问题；
+ 
+ 同时为了解决cache满了之后，需要快速定位到抛弃哪个key值的问题，我们引入整数minFreq；
+ 因为出现频率总是从1、2、3.。这样递增，每次淘汰的时候从出现频率为minFreq的链表中选择1个即可；
+ ps：get操作也需要更新minFreq，比如说put(1, 2)后minFreq=1，如果再出现get（1）此时minFreq=2，因为唯一的key值1已经出现了两次；
+ 仔细看代码，minFreq的更新并没有while循环，留给你思考下为什么。
  
  
  
