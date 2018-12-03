@@ -80,18 +80,13 @@ public:
             dfs(ret, str, left - 1, right);
             str.pop_back();
         }
-        
         if (left < right && right > 0) { // 必须保证right > left，这样的字符串才是合法的
             str.push_back(')');
             dfs(ret, str, left, right - 1);
             str.pop_back();
         }
-        
-        if (left == 0 && right == 0) {
+        if (left == 0 && right == 0)
             ret.push_back(str);
-        }
-        
-        
     }
     
     vector<string> generateParenthesis(int n) {
@@ -101,6 +96,7 @@ public:
         return ret;
     }
 }leetcode;
+
 
 int main(int argc, const char * argv[]) {
     

@@ -6,7 +6,7 @@
 //  Copyright loyinglin. All rights reserved.
 
 /************************** 题解 **********************
- [题目链接]()
+ [题目链接](http://codeforces.com/contest/1061/problem/A)
  **题目大意：**
  
  输入：
@@ -57,27 +57,13 @@ int a[N];
 int main(int argc, const char * argv[]) {
     // insert code here...
     
-    int n;
-    cin >> n;
-    
-    for (int i = 1; i <= n/2; ++i) {
-        cin >> a[i];
+    int n, s;
+    cin >> n >> s;
+    int ans = s / n;
+    if (s % n) {
+        ++ans;
     }
-    
-    sort(a + 1, a + 1 + n / 2);
-    
-    int costB = 0, costW = 0;
-    for (int i = 1; i <= n; ++i) {
-        if (i % 2) {
-            costB += abs(i - a[(i+1)/2]);
-        }
-        else {
-            costW += abs(i - a[(i+1)/2]);
-        }
-    }
-    
-    cout << min(costB, costW) << endl;
-    
+    cout << ans;
     
     return 0;
 }
