@@ -13,11 +13,11 @@
  比如说原始串是"hello"，那么目标串可以为"hello", "hhhhello", "hheeeellllooo"，但不能为"hell", "helo", "hhllllooo"。
  
  输入：
- 第一行，数字n，表示n组字符；
- 每组两行输入，第一行是原始字符串，第二行是目标字符串；
+ 第一行是整数t，表示t个样例；
+ 每个样例有2行输入，第1行是原始字符串，第2行是目标字符串；
  
  输出：
- 可能出现则输出YES，不可能则输出NO。
+ 对于每个样例，如果可能出现则输出YES，不可能则输出NO。
  
  Examples
  input
@@ -44,21 +44,12 @@
  1、sourceStr是targetStr的子序列；
  2、sourceStr中间某些单词会重复，并且targetStr与sourceStr不同的部分，均由这个重复的单词组成。
 
- 基于此，可以从左到右遍历sourceStr和targetStr，当字符相同时可以加一，不同时
- if (a[x] == b[y]) {
- ++x;
- ++y;
- }
- else {
- if (x > 0 && b[y] == a[x - 1]) {
- ++y;
- }
- else {
- break;
- }
- }
- 
- 最后注意把y补齐，判断是否能否填充完毕。
+ 基于此，可以从左到右遍历sourceStr和targetStr，用x和y分别来表示sourceStr和targetStr的当前遍历进度；
+ 初始时，x=0, y=0；
+ 如果sourceStr[x]==targetStr[y]，表示同时出现一个字符，那么直接++x和++y；
+ 如果sourceStr[x]!=targetStr[y]，如果是普通字符串匹配，此时会fail，但是这里有题目要求2的特点，targetStr[y]可能是sourceStr[x-1]的重复；所以如果sourceStr[x-1]==targetStr[y]，仍然可以++y，此时x不动；
+  
+ 最后注意把y补齐，判断是否能否x==strlen(sourceStr)，y==strlen(targetStr)，表示是否填充完毕。
  
  
  ************************* 题解 ***********************/
