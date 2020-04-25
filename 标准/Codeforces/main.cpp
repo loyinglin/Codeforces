@@ -9,12 +9,11 @@
  [题目链接]()
  **题目大意：**
  
- 输入：
- 输出：
+ **输入：**
+ **输出：**
  
  **Examples**
- **input**
- **output**
+ 
  
  **题目解析：**
  
@@ -52,6 +51,11 @@ struct Node {
     Node(int first, int second):first(first), second(second){};
     Node(){};
 }node[N];
+
+bool cmp(int a, int b) {
+    return a > b;
+}
+
 int a[N];
 
 int main(int argc, const char * argv[]) {

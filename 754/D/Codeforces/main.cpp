@@ -39,9 +39,9 @@
  
  
  题目解析：
- 容易知道优惠券的选择是没有先后顺序，考虑对其按照区间进行排序。
- 区间从小到大，右区间从小到大。
- 排序后，
+ 容易知道优惠券的选择是没有先后顺序，可以对其进行排序。
+ 先保证左区间从小到大，再考虑右区间从小到大。
+ 
  对于一个区间(l[i], r[i])，如果之前某个区间的r[j] < l[i]; (j < i)
  那么就有l[i] > r[j] >= l[j]; 即是新的区间i是在区间j的右边；
  那么对于区间i+1,因为有l[i+1] >= l[i], 那么i+1 必然也是在区间j的右边；
@@ -106,7 +106,8 @@ int main(int argc, const char * argv[]) {
     priority_queue<Node> priQueue;
     int ans = 0;
     pair<int, int> seg;
-    for (int i = 0; i < n; ++i) { // 有限队列里面有若干个值，r最小的在前面，假设是top.r，l最大的是l[i]，那么这些区间的公共区域是 l[i] 到 r
+    for (int i = 0; i < n; ++i) {
+        // 有限队列里面有若干个值，r最小的在前面，假设是top.r，l最大的是l[i]，那么这些区间的公共区域是 l[i] 到 r
         while (!priQueue.empty()) {
             Node top = priQueue.top();
             if (top.r < a[i].l) {
