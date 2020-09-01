@@ -5,11 +5,27 @@
 //  Created by loyinglin on 16/9/4.
 //  Copyright © 2016年 loyinglin. All rights reserved.
 /************************** 题解 **********************
- [题目链接]()
+ [题目链接](https://leetcode-cn.com/problems/palindrome-number/submissions/)
  **题目大意：**
+ 判断一个整数是否是回文数。回文数是指正序（从左向右）和倒序（从右向左）读都是一样的整数。
+
+ 示例 1:
+ 输入: 121
+ 输出: true
  
+ 示例 2:
+ 输入: -121
+ 输出: false
+ 解释: 从左向右读, 为 -121 。 从右向左读, 为 121- 。因此它不是一个回文数。
+ 
+ 示例 3:
+ 输入: 10
+ 输出: false
+ 解释: 从右向左读, 为 01 。因此它不是一个回文数。
 
  **题目解析：**
+ 将数字转成字符串，然后开始从左右两边开始遍历，如果遇到不一样的字符串则输出false；
+ 如果没有发现不一样的字符，则左右边界递进，则最后输出true；
 
 
  ```
@@ -17,7 +33,7 @@
  ```
  
  **思考：**
- 
+ 如果是要在字符串中找出最长的回文串呢？
  
  
  ************************* 题解 ***********************/
@@ -62,35 +78,18 @@ const int N = 50000;
 
 class Solution {
 public:
-    int x, y;
-    
-    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
-        float ret = 0.0;
-        int n = nums1.size(), m = nums2.size();
-        int mid = (n + m + 1) / 2, k = 0;
-        while (k < mid) {
-            ret = getNext(nums1, nums2);
-            ++k;
+    bool isPalindrome(int x) {
+        char s[20];
+        sprintf(s, "%d", x);
+        int end = strlen(s) - 1, st = 0;
+        while (st < end) {
+            if (s[st] != s[end]) {
+                return false;;
+            }
+            ++st;
+            --end;
         }
-        if ((n + m) % 2 == 0) {
-            ret = (ret + getNext(nums1, nums2)) / 2.0;
-        }
-        return ret;
-    }
-    
-    int getNext(vector<int>& nums1, vector<int>& nums2) {
-        if (x == nums1.size()) {
-            return nums2[y++];
-        }
-        if (y == nums2.size()) {
-            return nums1[x++];
-        }
-        if (nums1[x] < nums2[y]) {
-            return nums1[x++];
-        }
-        else {
-            return nums2[y++];
-        }
+        return true;
     }
 }leetcode;
 

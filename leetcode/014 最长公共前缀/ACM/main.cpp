@@ -5,19 +5,33 @@
 //  Created by loyinglin on 16/9/4.
 //  Copyright © 2016年 loyinglin. All rights reserved.
 /************************** 题解 **********************
- [题目链接]()
+ [题目链接](https://leetcode-cn.com/problems/longest-common-prefix)
  **题目大意：**
- 
+ 编写一个函数来查找字符串数组中的最长公共前缀。
 
+ 如果不存在公共前缀，返回空字符串 ""。
+
+ 示例 1:
+ 输入: ["flower","flow","flight"]
+ 输出: "fl"
+ 
+ 示例 2:
+ 输入: ["dog","racecar","car"]
+ 输出: ""
+ 
+ 解释: 输入不存在公共前缀。
+ 说明: 所有输入只包含小写字母 a-z 。
+
+ 
  **题目解析：**
-
+前缀和，直接for循环遍历。
 
  ```
  
  ```
  
- **思考：**
- 
+ **注意：**
+ vector为空的情况。
  
  
  ************************* 题解 ***********************/
@@ -62,35 +76,20 @@ const int N = 50000;
 
 class Solution {
 public:
-    int x, y;
-    
-    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
-        float ret = 0.0;
-        int n = nums1.size(), m = nums2.size();
-        int mid = (n + m + 1) / 2, k = 0;
-        while (k < mid) {
-            ret = getNext(nums1, nums2);
-            ++k;
-        }
-        if ((n + m) % 2 == 0) {
-            ret = (ret + getNext(nums1, nums2)) / 2.0;
+    string longestCommonPrefix(vector<string>& strs) {
+        string ret;
+        while (true && strs.size()) {
+            for (int i = 0; i < strs.size(); ++i) {
+                if (strs[i].size() < ret.length() + 1) {
+                    return ret;
+                }
+                if (i > 0 && strs[i][ret.length()] != strs[0][ret.length()]) {
+                    return ret;
+                }
+            }
+            ret.push_back(strs[0][ret.length()]);
         }
         return ret;
-    }
-    
-    int getNext(vector<int>& nums1, vector<int>& nums2) {
-        if (x == nums1.size()) {
-            return nums2[y++];
-        }
-        if (y == nums2.size()) {
-            return nums1[x++];
-        }
-        if (nums1[x] < nums2[y]) {
-            return nums1[x++];
-        }
-        else {
-            return nums2[y++];
-        }
     }
 }leetcode;
 
