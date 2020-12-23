@@ -5,7 +5,7 @@
 //  Created by loyinglin on 16/9/4.
 //  Copyright © 2016年 loyinglin. All rights reserved.
 /************************** 题解 **********************
- 题目链接：https://leetcode.com/problems/swap-nodes-in-pairs/description/
+ 题目链接：https://leetcode-cn.com/problems/swap-nodes-in-pairs/
  题目大意：
  给出一个链表，要求每两个节点做一次节点交换，如果是奇数链表，最后一个节点不用交换；
  比如说给出1->2->3->4，要求结果是2->1->4->3；

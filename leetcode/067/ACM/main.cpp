@@ -5,12 +5,12 @@
 //  Created by loyinglin on 16/9/4.
 //  Copyright © 2016年 loyinglin. All rights reserved.
 /************************** 题解 **********************
- [题目链接]()
+ [题目链接](https://leetcode-cn.com/problems/add-binary/)
  **题目大意：**
  
 
  **题目解析：**
-
+大数加法的简化版本
 
  
  **思考：**
@@ -59,42 +59,34 @@ const int N = 50000;
 
 class Solution {
 public:
-    int x, y;
-    
-    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
-        float ret = 0.0;
-        int n = nums1.size(), m = nums2.size();
-        int mid = (n + m + 1) / 2, k = 0;
-        while (k < mid) {
-            ret = getNext(nums1, nums2);
-            ++k;
+    string addBinary(string a, string b) {
+        string ret;
+        reverse(a.begin(), a.end());
+        reverse(b.begin(), b.end());
+        int x = 0, y = 0, add = 0;
+        while (x < a.length() || y < b.length()) {
+            int temp = add;
+            if (x < a.length()) {
+                temp += a[x] - '0';
+            }
+            if (y < b.length()) {
+                temp += b[y] - '0';
+            }
+            ret.push_back('0' + temp % 2);
+            add = temp / 2;
+            ++x, ++y;
         }
-        if ((n + m) % 2 == 0) {
-            ret = (ret + getNext(nums1, nums2)) / 2.0;
+        if (add) {
+            ret.push_back('1');
         }
+        reverse(ret.begin(), ret.end());
         return ret;
-    }
-    
-    int getNext(vector<int>& nums1, vector<int>& nums2) {
-        if (x == nums1.size()) {
-            return nums2[y++];
-        }
-        if (y == nums2.size()) {
-            return nums1[x++];
-        }
-        if (nums1[x] < nums2[y]) {
-            return nums1[x++];
-        }
-        else {
-            return nums2[y++];
-        }
     }
 }leetcode;
 
 
 int main(int argc, const char * argv[]) {
-    vector<int> nums1 = {1, 3};
-    vector<int> nums2 = {2};
+    cout << leetcode.addBinary("1010", "1011") << endl;
     
     
     return 0;
