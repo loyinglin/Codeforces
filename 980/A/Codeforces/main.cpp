@@ -82,8 +82,6 @@ int checkLen(int x) {
 
 
 int main(int argc, const char * argv[]) {
-    // insert code here...
-    
     string str;
     cin >> str;
     int x = 0, y = 0;
@@ -95,15 +93,11 @@ int main(int argc, const char * argv[]) {
             ++y;
         }
     }
-    
     if (y == 0 || x % y == 0) {
         cout << "YES" << endl;
     }
     else {
         cout << "NO" << endl;
     }
-    
-    
-    
     return 0;
 }
