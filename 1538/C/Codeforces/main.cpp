@@ -78,8 +78,16 @@ public:
             }
             sort(a, a + n);
             lld sum = 0;
-            for (int i = 0; i < n; ++i) {
-                <#statements#>
+            for (int i = 0; i + 1 < n; ++i) {
+                int left = l - a[i];
+                int right = r - a[i] + 1;
+                // 从i+1开始，找到第一个大于等于left的数字作为起点x
+                int x = lower_bound(a + i + 1, a + n - i - 1, left) - (a + i + 1);
+                if (x >= n) {
+                    continue;;
+                }
+                // 新x+1开始，找到第一个大于right的数字作为终点y
+                int y = lower_bound(a + x, a + n - i, left) - (a + i);
             }
             
         }
