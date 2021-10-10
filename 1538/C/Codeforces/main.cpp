@@ -39,6 +39,11 @@
 
  
  **题目解析：**
+ 题目要求的是任意a[i]和a[j]，那么数组的顺序没有意义，可以直接将数组进行排序；
+ 如果不考虑复杂度，我们可以枚举pair(i, j)是否满足要求，这样复杂度是N*N；
+ 由于排序完之后，数组是有序的，我们在枚举pair(i, j)的时候，可以采用下面的策略：
+ 从小到大枚举i，假设已经先取了数字a[i]并且i<j，要求是找到l<=a[i]+a[j]<=r，那么就是在区间[i+1, n]里面找到l-a[i]作为起点，r-a[i]作为终点的区间；
+ 我们可以采用二分查找来，也可以使用快捷方法lower_bound，详见如下：
  
  
  **思考🤔：**
@@ -82,14 +87,15 @@ public:
                 int left = l - a[i];
                 int right = r - a[i] + 1;
                 // 从i+1开始，找到第一个大于等于left的数字作为起点x
-                int x = lower_bound(a + i + 1, a + n - i - 1, left) - (a + i + 1);
+                int x = lower_bound(a + i + 1, a + n, left) - a;
                 if (x >= n) {
                     continue;;
                 }
-                // 新x+1开始，找到第一个大于right的数字作为终点y
-                int y = lower_bound(a + x, a + n - i, left) - (a + i);
+                // 新x开始，找到第一个大于right的数字作为终点y
+                int y = lower_bound(a + x, a + n, right) - a;
+                sum += y - x;
             }
-            
+            cout << sum << endl;
         }
     }
 }
@@ -106,26 +112,9 @@ int main(int argc, const char * argv[]) {
 
 /**
  111
- 7 4
- 3 5 4 4 6 3 2
-
- 7 5
- 3 5 4 4 6 3 2
+ 5 3 5
+ 1 2  3 4 5
  
- 7 6
- 3 5 4 4 6 3 2
- 
- 7 7
- 3 5 4 4 6 3 2
- 
- 
- 5 4
- 4 1 2 3 4
- 
- 4 3
- 4 1 2 3
-
- 
- 6 6 6 6 6 3 2
- 3 1 2 2
+ 5 1 5
+ 3 4 5 6 7
  */
