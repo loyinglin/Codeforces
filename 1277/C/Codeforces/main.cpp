@@ -6,18 +6,38 @@
 //  Copyright loyinglin. All rights reserved.
 
 /************************** 题解 **********************
- [题目链接](http://codeforces.com/contest/1277/problem/C)
+ [题目链接](https://codeforces.com/contest/1277/problem/C)
  **题目大意：**
+ 给出一个字符串s，现在不希望字符串里面出现one和two这两个单词，比如说"oneee", "ontwow", "twone" and "oneonetwo"都是不好的字符串。
+ 现在可以从字符串中选择若干个位置，去掉这些位置上的字符。
+ 问最少去掉多少个字符。
  
  
  输入：
+ 第一行𝑡，表示t个样例 (1≤𝑡≤1e4)
+ 每个样例一行，字符串s，长度不超过 1.5⋅1e5
  
  输出：
-
+ 每个样例2行
+ 第一行，整数k表示需要去掉k个位置
+ 第二行，k个整数，表示k个需要去掉字符的位置。
  
  input
+ 4
+ onetwone
+ testme
+ oneoneone
+ twotwo
  
  output
+ 2
+ 6 3
+ 0
+
+ 3
+ 4 1 7
+ 2
+ 1 4
  
  
  **题目解析：**
