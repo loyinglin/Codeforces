@@ -6,7 +6,7 @@
 //  Copyright loyinglin. All rights reserved.
 
 /************************** 题解 **********************
- [题目链接](http://codeforces.com/contest/1328/problem/A)
+ [题目链接](https://codeforces.com/contest/1328/problem/A)
  **题目大意：**
  输入两个整数a和b，每次操作可以使得a=a+1；
  问最少要几次操作，可以使得a可以整除b；

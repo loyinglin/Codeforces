@@ -6,7 +6,7 @@
 //  Copyright loyinglin. All rights reserved.
 
 /************************** 题解 **********************
- [题目链接](http://codeforces.com/contest/1328/problem/B)
+ [题目链接](https://codeforces.com/contest/1328/problem/B)
  **题目大意：**
  有一个长度为n的字符串，有n-2个字符a，有2个字符b；
  把这个字符串重新排列，可以若干个字符串，然后按字典序排列，比如说n=5的时候：
