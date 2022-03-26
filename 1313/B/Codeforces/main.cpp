@@ -6,7 +6,7 @@
 //  Copyright loyinglin. All rights reserved.
 
 /************************** 题解 **********************
- [题目链接](http://codeforces.com/contest/1313/problem/B)
+ [题目链接](https://codeforces.com/contest/1313/problem/B)
  **题目大意：**
  n个人参加比赛，比赛分上半场和下半场，分别会产生1~n的名次；（没人并列）
  最终的比赛排名，是根据两场比赛的名次之和进行排列；

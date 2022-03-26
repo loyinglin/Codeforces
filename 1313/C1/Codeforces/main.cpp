@@ -6,7 +6,7 @@
 //  Copyright loyinglin. All rights reserved.
 
 /************************** 题解 **********************
- [题目链接](http://codeforces.com/contest/1313/problem/C1)
+ [题目链接](https://codeforces.com/contest/1313/problem/C1)
  **题目大意：**
  建筑公司要建n栋楼（排成一行），第i栋的设计最大高度是m[i]；
  并且当地城市有规定：每栋楼不能在左右两边同时出现比它高的建筑；
