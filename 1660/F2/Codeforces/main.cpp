@@ -6,7 +6,7 @@
 //  Copyright loyinglin. All rights reserved.
 
 /************************** 题解 **********************
- [题目链接](https://codeforces.com/contest/1660/problem/F1)
+ [题目链接](https://codeforces.com/contest/1660/problem/F2)
  **题目大意：**
  给出由+和-组成的字符串，我们称字符串为平衡的字符串，假如+和-的字符是相同的；
  现在可以对字符串执行操作，每次将两个相邻的-号合并为+号；假如若干次操作之后，字符串变成了平衡的字符串，那么这个字符串可以称之为特殊的字符串；
