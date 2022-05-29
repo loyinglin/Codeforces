@@ -6,7 +6,7 @@
 //  Copyright loyinglin. All rights reserved.
 
 /************************** 题解 **********************
- [题目链接](http://codeforces.com/contest/1355/problem/A)
+ [题目链接](https://codeforces.com/contest/1355/problem/A)
  **题目大意：**
  给出一个整数a[1]，假设有下面这样一个迭代公式：
  

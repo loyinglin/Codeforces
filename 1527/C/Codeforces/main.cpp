@@ -6,7 +6,7 @@
 //  Copyright loyinglin. All rights reserved.
 
 /************************** 题解 **********************
- [题目链接](http://codeforces.com/contest/1527/problem/C)
+ [题目链接](https://codeforces.com/contest/1527/problem/C)
  **题目大意：**
  有n个整数的数组，对于一个数组的weight，定位数组中所有的[i, j]，有多少个满足a[i]==a[j]；
  问数组的所有子数组中，所有的weight有多少。

@@ -21,3 +21,32 @@ int tree_sum(int x)
     }  
     return sum;  
 }  
+
+class TreeArray {
+    static const int N = 201001;
+    int tree[N];
+    
+    int low_bit(int x)
+    {
+        return x&-x;
+    }
+    public:
+    void tree_add(int x,int v, int n)
+    {
+        while(x<=n)
+        {
+            tree[x] += v;
+            x+=low_bit(x);
+        }
+    }
+    int tree_sum(int x)
+    {
+        int sum=0;
+        while(x)
+        {
+            sum += tree[x];
+            x-=low_bit(x);
+        }
+        return sum;
+    }
+};
