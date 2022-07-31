@@ -6,20 +6,27 @@
 //  Copyright loyinglin. All rights reserved.
 
 /************************** 题解 **********************
- [题目链接](http://codeforces.com/contest/1515/problem/A)
+ [题目链接](https://codeforces.com/contest/1515/problem/B)
  **题目大意：**
  给出n个等边直角三角形，问 能不能拼出来正方形。
  
  **输入：**
+ 第一行整数𝑡，表示样例数 (1≤𝑡≤1e4)
+ 每个样例一行，整数𝑛 (1≤𝑛≤1e9)
  **输出：**
-
+ 每个样例一行，可以则输出YES，否则输出NO；
  
  **Examples**
  **input**
- 
+ 3
+ 2
+ 4
+ 6
  
  **output**
- 
+ YES
+ YES
+ NO
  
  **题目解析：**
  一个三角形面积是0.5，n个三角形的面积是n/2，假设最终能拼成三角形，则边长是 √(n/2)。
