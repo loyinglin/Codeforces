@@ -6,7 +6,7 @@
 //  Copyright loyinglin. All rights reserved.
 
 /************************** 题解 **********************
- [题目链接](http://codeforces.com/contest/1519/problem/D)
+ [题目链接](https://codeforces.com/contest/1519/problem/D)
  **题目大意：**
  给出n个整数的数组a和b，数组a和数组b的乘积和等于a[0]*b[1]+a[2]*b[2]+...+a[n]*b[n]；
  可以选择一个区间[x, y]（x<=y)，调转数组a区间[x, y]内整数的顺序，比如说数字1,2,3则调转为3,2,1；
