@@ -6,7 +6,7 @@
 //  Copyright loyinglin. All rights reserved.
 
 /************************** 题解 **********************
- [题目链接](http://codeforces.com/contest/1526/problem/C1)
+ [题目链接](https://codeforces.com/contest/1526/problem/C1)
  **题目大意：**
  
  
