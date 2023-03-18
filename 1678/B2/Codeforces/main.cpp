@@ -6,7 +6,7 @@
 //  Copyright loyinglin. All rights reserved.
 
 /************************** 题解 **********************
- [题目链接](https://codeforces.com/contest/1678/problem/BB)
+ [题目链接](https://codeforces.com/contest/1678/problem/B2)
  **题目大意：**
  给出一个偶数长度的字符串，由0和1组成；
  将字符串中相同字符组成的子串切分出来，比如说11001111可以切成 11、00 和 1111；
