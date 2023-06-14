@@ -6,7 +6,7 @@
 //  Copyright loyinglin. All rights reserved.
 
 /************************** 题解 **********************
- [题目链接](https://codeforces.com/contest/1783/problem/A)
+ [题目链接](https://codeforces.com/contest/1778/problem/A)
  **题目大意：**
  有n个整数的数组a，数组元素由1和-1组成；
  现在可以对数组中的元素进行操作（最后一个元素无法操作），将这个元素与右边元素进行符号反转；

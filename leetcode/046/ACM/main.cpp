@@ -5,24 +5,32 @@
 //  Created by loyinglin on 16/9/4.
 //  Copyright © 2016年 loyinglin. All rights reserved.
 /************************** 题解 **********************
- 题目链接：https://leetcode.com/problems/permutations/description/
+ [题目链接](https://leetcode.cn/problems/permutations/description/?utm_source=LCUS&utm_medium=ip_redirect&utm_campaign=transfer2china)
  题目大意：
- 
- 
+ 给定一个不含重复数字的数组 nums ，返回其 所有可能的全排列 。你可以 按任意顺序 返回答案。
+
+ 示例 1：
+ 输入：nums = [1,2,3]
+ 输出：[[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]
+ 示例 2：
+ 输入：nums = [0,1]
+ 输出：[[0,1],[1,0]]
+ 示例 3：
+ 输入：nums = [1]
+ 输出：[[1]]
+
+ 提示：
+ 1 <= nums.length <= 6
+ -10 <= nums[i] <= 10
+ nums 中的所有整数 互不相同
+
+
  题目解析：
- 
- dfs，每个数字有和不取的选择；
+ 只要完成1到n的全排列，那么输出的时候把1到n换成数组元素nums[1]到nums[n]就可以得到全排列；
+ 全排列的做法：
+ 深度优先遍历（DFS），1、2、3、、、n，每个数字有取和不取的选择；
  因为数字不相同，所以不会出现不一致的情况；（每一位至少存在不一样的数字）
- 递归实现，更加简单；
- 
- 
- 
- 复杂度解析：
- 
- 
- 
- 其他解法：
- 
+ 用递归更容易实现。 
  
  
  ************************* 题解 ***********************/
