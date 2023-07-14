@@ -6,7 +6,7 @@
 //  Copyright loyinglin. All rights reserved.
 
 /************************** 题解 **********************
- [题目链接](https://codeforces.com/contest/1806/problem/A)
+ [题目链接](https://codeforces.com/contest/1806/problem/b)
  **题目大意：**
  在二维坐标系中，每次有两个走法：
  1、从(𝑥,𝑦) 到 (𝑥+1, 𝑦+1)；
