@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "FDDE618B-877C-4A20-A289-E699D6CB1B20"
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A228A9ED-63DF-4757-8E13-9ABCF5804870"
+            shouldBeEnabled = "Yes"
+            condition = "diff == 1"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ACM/main.cpp"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "98"
+            endingLineNumber = "98"
+            landmarkName = "dfs(pos, dir, nums)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "A228A9ED-63DF-4757-8E13-9ABCF5804870 - ea8f4b1fc6b469"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Solution::dfs(int, int, std::__1::vector&lt;int, std::__1::allocator&lt;int&gt; &gt;&amp;, int (*) [1010])"
+                  moduleName = "ACM"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/loyinglin/Documents/project/Learn/Codeforces/leetcode/1027/ACM/main.cpp"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "98"
+                  endingLineNumber = "98"
+                  offsetFromSymbolStart = "212">
+               </Location>
+               <Location
+                  uuid = "A228A9ED-63DF-4757-8E13-9ABCF5804870 - ea8f4b1fc6b469"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Solution::dfs(int, int, std::__1::vector&lt;int, std::__1::allocator&lt;int&gt; &gt;&amp;, int (*) [1010])"
+                  moduleName = "ACM"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/loyinglin/Documents/project/Learn/Codeforces/leetcode/1027/ACM/main.cpp"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "98"
+                  endingLineNumber = "98"
+                  offsetFromSymbolStart = "184">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>

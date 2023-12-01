@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "37CF1F57-A9E7-4F70-80DC-0B3DDE3CE908"
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F7AF8668-F012-454A-8E07-49C94DB4BB3A"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ACM/main.cpp"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "122"
+            endingLineNumber = "122"
+            landmarkName = "search(nums, firstLen, secondLen)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "F7AF8668-F012-454A-8E07-49C94DB4BB3A - 90a42637e5ab9d5b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Solution::search(std::__1::vector&lt;int, std::__1::allocator&lt;int&gt; &gt;&amp;, int, int)"
+                  moduleName = "ACM"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/loyinglin/Documents/project/Learn/Codeforces/leetcode/1031%20ERROR/ACM/main.cpp"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "124"
+                  endingLineNumber = "124"
+                  offsetFromSymbolStart = "1076">
+               </Location>
+               <Location
+                  uuid = "F7AF8668-F012-454A-8E07-49C94DB4BB3A - 90a42637e5ab9d5b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Solution::search(std::__1::vector&lt;int, std::__1::allocator&lt;int&gt; &gt;&amp;, int, int)"
+                  moduleName = "ACM"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/loyinglin/Documents/project/Learn/Codeforces/leetcode/1031%20ERROR/ACM/main.cpp"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "124"
+                  endingLineNumber = "124"
+                  offsetFromSymbolStart = "1068">
+               </Location>
+               <Location
+                  uuid = "F7AF8668-F012-454A-8E07-49C94DB4BB3A - 90a42637e5ab9d5b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Solution::search(std::__1::vector&lt;int, std::__1::allocator&lt;int&gt; &gt;&amp;, int, int)"
+                  moduleName = "ACM"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/loyinglin/Documents/project/Learn/Codeforces/leetcode/1031%20ERROR/ACM/main.cpp"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "124"
+                  endingLineNumber = "124"
+                  offsetFromSymbolStart = "1064">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>
