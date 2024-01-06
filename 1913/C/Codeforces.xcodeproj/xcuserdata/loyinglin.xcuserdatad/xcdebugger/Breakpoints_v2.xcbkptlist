@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "469AC31F-CBEF-4F55-AE81-73521821E717"
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "631A54BB-667F-4067-BCB5-44119C0A67C8"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Codeforces/main.cpp"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "81"
+            endingLineNumber = "81"
+            landmarkName = "solve()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "631A54BB-667F-4067-BCB5-44119C0A67C8 - 526560142b7a1e62"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Solution::solve()"
+                  moduleName = "Codeforces"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/loyinglin/Documents/project/Learn/Codeforces/1913/C/Codeforces/main.cpp"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "83"
+                  endingLineNumber = "83"
+                  offsetFromSymbolStart = "268">
+               </Location>
+               <Location
+                  uuid = "631A54BB-667F-4067-BCB5-44119C0A67C8 - 526560142b7a1e43"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Solution::solve()"
+                  moduleName = "Codeforces"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/loyinglin/Documents/project/Learn/Codeforces/1913/C/Codeforces/main.cpp"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "82"
+                  endingLineNumber = "82"
+                  offsetFromSymbolStart = "260">
+               </Location>
+               <Location
+                  uuid = "631A54BB-667F-4067-BCB5-44119C0A67C8 - 526560142b7a1e43"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Solution::solve()"
+                  moduleName = "Codeforces"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/loyinglin/Documents/project/Learn/Codeforces/1913/C/Codeforces/main.cpp"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "82"
+                  endingLineNumber = "82"
+                  offsetFromSymbolStart = "264">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>
