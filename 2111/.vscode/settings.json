@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "iostream": "cpp",
+        "deque": "cpp",
+        "cstdio": "cpp",
+        "queue": "cpp",
+        "stack": "cpp"
+    }
+}
