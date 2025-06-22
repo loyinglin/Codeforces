@@ -1,0 +1,17 @@
+{
+    "files.associations": {
+        "iostream": "cpp",
+        "queue": "cpp",
+        "stack": "cpp",
+        "ostream": "cpp",
+        "__locale": "cpp",
+        "ios": "cpp",
+        "initializer_list": "cpp",
+        "cmath": "cpp",
+        "cstdio": "cpp",
+        "sstream": "cpp",
+        "set": "cpp",
+        "__tree": "cpp",
+        "map": "cpp"
+    }
+}
